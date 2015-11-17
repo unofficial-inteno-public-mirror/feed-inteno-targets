@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 ARCH:=mips
-BOARD:=brcm63xx_ref_nand
+BOARD:=iopsys-brcm63xx-mips
 BOARDNAME:=Broadcom BCM63xx_ref_nand
 FEATURES:=
 LINUX_VERSION:=3.3.8

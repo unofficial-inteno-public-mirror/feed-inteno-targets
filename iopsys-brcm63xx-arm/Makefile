@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 
 ARCH:=arm
-BOARD:=brcm63xx_ref_nand_arm
+BOARD:=iopsys-brcm63xx-arm
 BOARDNAME:=Broadcom BCM63xx_ref_nand_arm
 FEATURES:=
 LINUX_VERSION:=3.3.8
