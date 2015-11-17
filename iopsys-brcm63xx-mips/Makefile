@@ -10,7 +10,9 @@ ARCH:=mips
 BOARD:=iopsys-brcm63xx-mips
 BOARDNAME:=Broadcom BCM63xx_ref_nand
 FEATURES:=
-LINUX_VERSION:=3.3.8
+KERNEL_PATCHVER:=3.4
+LINUX_VERSION-3.4 = .11
+
 MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
 
 include $(INCLUDE_DIR)/target.mk
