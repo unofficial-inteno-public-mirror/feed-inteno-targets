@@ -17,10 +17,11 @@ LINUX_VERSION-3.4 = .11
 
 MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
 
+include $(INCLUDE_DIR)/target.mk
+
 #define Target/Description
 #	Build firmware images for Broadcom based xDSL/routers
 #	based on the Broadcom 4.16 SDK
 #endef
 
-include $(INCLUDE_DIR)/target.mk
 $(eval $(call BuildTarget))
