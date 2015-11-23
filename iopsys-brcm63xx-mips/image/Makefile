@@ -120,7 +120,7 @@ define Image/Prepare
 	echo $(CONFIG_TARGET_CUSTOMER)> $(BUILD_DIR_ROOT)/lib/db/version/iop_customer
 
 	# strip out unneeded files (.w.x.y)
-	rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.3.8
+	rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11
 	rm -rf $(BUILD_DIR_ROOT)/usr/lib/libvorbisenc*
 
     ifeq ($(CONFIG_TARGET_NO_DSL),y)
