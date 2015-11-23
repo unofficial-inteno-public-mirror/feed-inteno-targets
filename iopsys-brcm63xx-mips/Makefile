@@ -10,7 +10,7 @@ ARCH:=mips
 BOARD:=iopsys-brcm63xx-mips
 BOARDNAME:=iopsys broadcom MIPS
 SUBTARGETS:=cg300 cg301 dg150 dg200 dg301 dg301al dg351 eg200 eg300 vg50 vox25
-FEATURES:=
+FEATURES:=usb jffs2_nand nand ubifs
 
 KERNEL_PATCHVER:=3.4
 LINUX_VERSION-3.4 = .11
