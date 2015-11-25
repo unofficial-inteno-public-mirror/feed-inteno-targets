@@ -39,6 +39,9 @@ else
 BRCMREF_STR := <FIXME!>
 endif
 
+JFFS2OPTS += --pad --no-cleanmarkers
+JFFS2_BLOCKSIZE := 128k
+
 # NOTE:
 #
 # The following targets generate a number of different images:
