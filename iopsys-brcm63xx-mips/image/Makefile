@@ -39,8 +39,16 @@ else
 BRCMREF_STR := <FIXME!>
 endif
 
-JFFS2OPTS += --pad --no-cleanmarkers
 JFFS2_BLOCKSIZE := 128k
+
+#use the sortlist to have cfe and kernel first
+JFFS2OPTS += -S $(KDIR)/sortlist
+
+# KEN: why do we have it in KDIR ???
+JFFS2OPTS += -N $(KDIR)/nocomprlist
+
+#don't use the default device_table in $(INCLUDE_DIR)/device_table.txt
+MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
 # NOTE:
 #
