@@ -50,6 +50,8 @@ JFFS2OPTS += -N $(KDIR)/nocomprlist
 #don't use the default device_table in $(INCLUDE_DIR)/device_table.txt
 MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
+NAND_BLOCKSIZE := 2048:128k
+
 # NOTE:
 #
 # The following targets generate a number of different images:
@@ -218,7 +220,7 @@ define Image/Build/CFE
 	$(eval CFE_BUILT:=1)
 endef
 
-define Image/Build/jffs2-128k
+define Image/Build/jffs2-nand-2048-128k
 
 	echo "In Image/Build/jffs2-128k $(1) $(2)"
 
