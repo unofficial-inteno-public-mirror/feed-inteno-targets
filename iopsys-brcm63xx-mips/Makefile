@@ -19,9 +19,47 @@ MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
 
 include $(INCLUDE_DIR)/target.mk
 
-#define Target/Description
-#	Build firmware images for Broadcom based xDSL/routers
-#	based on the Broadcom 4.16 SDK
-#endef
+define Target/Description
+	Build firmware images for Broadcom based xDSL/routers
+	based on the Broadcom 4.16 SDK
+endef
+
+define Target/Config
+
+# target config
+config TARGET_iopsys_brcm63xx_mips
+	bool
+	select BRCM_SDK_VER_416040
+	select BCM_ENDPOINT_MODULE
+	select BCM_I2C
+
+config 	KERNEL_GIT_CLONE_URI
+	string
+	default "git@ihgsp.inteno.se:bcmlinux.git" if TARGET_iopsys_brcm63xx_mips
+
+config 	KERNEL_GIT_BRANCH
+	string
+	default "bcm_4.16L.04" if TARGET_iopsys_brcm63xx_mips
+
+config 	BCM_CFE_PASSWORD
+	string
+	default "" if TARGET_iopsys_brcm63xx_mips
+
+config 	BCM_BLNAND
+	string
+	default "0" if TARGET_iopsys_brcm63xx_mips
+
+
+
+# board config
+config	BCM_KERNEL_PROFILE
+	string
+	default "963268GWV" if TARGET_iopsys_brcm63xx_mips_dg301
+
+config 	BCM_CHIP_ID
+	string
+	default "63268" if TARGET_iopsys_brcm63xx_mips_dg301
+endef
+
 
 $(eval $(call BuildTarget))
