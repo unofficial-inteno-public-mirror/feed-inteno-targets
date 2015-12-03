@@ -51,7 +51,16 @@ config 	BCM_BLNAND
 
 
 
+
 # board config
+config	TARGET_MODEL_NAME
+	string
+	default "DG301-WU21U" if TARGET_iopsys_brcm63xx_mips_dg301
+
+config	TARGET_IBOARDID
+	string
+	default "DG301" if TARGET_iopsys_brcm63xx_mips_dg301
+
 config	BCM_KERNEL_PROFILE
 	string
 	default "963268GWV" if TARGET_iopsys_brcm63xx_mips_dg301
