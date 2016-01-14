@@ -1,7 +1,7 @@
 
 define Profile/inteno
   NAME:=Inteno
-  PACKAGES:=bcmkernel bcmhotproxy brcm-base-files iopsys-base-files natalie-dect natalie-dect-h dectmngr
+  PACKAGES:=bcmkernel bcmhotproxy brcm-base-files iopsys-base-files natalie-dect natalie-dect-h dectmngr layer2interface
   CONFIG=KEN_CONFA
 endef
 
