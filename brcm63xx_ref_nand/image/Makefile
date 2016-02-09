@@ -11,6 +11,7 @@ IHGSP_BUILD_VERSION:=$(shell echo $(IHGSP_VERSION) | sed s/\"//g)
 BUILD_DIR_ROOT:=$(BUILD_DIR)/root-$(shell echo $(CONFIG_TARGET_BOARD) | sed s/\"//g)
 KERNEL_ENTRY:= $(shell readelf -h $(KDIR)/vmlinux.bcm.elf | grep Entry | awk '{print $$4}')
 
+HEADER_VERSION:=2
 CFERAM_FILENAME:=cferam.$(CONFIG_TARGET_CFERAM_EXT)
 CFE_BUILT:=
 BOARD_ID:=D301
@@ -43,22 +44,25 @@ endif
 # NOTE:
 #
 # The following targets generate a number of different images:
-# .w = Broadcom style JFFS2 image for old banked lay-out
-# .x = Broadcom style UBIFS image for use with CFE, containing CFE, nvram,
-#      kernel and initial UBI image
-# .y = UBI system upgrade image, containing cfe, kernel & UBIFS data
-# .z = System upgrade image containing CFE only
+# xxx_cfe = Broadcom style CFE image
+# xxx_fs_image = Broadcom style JFFS2 image
+# .w = Broadcom style CFE+JFFS2 image for old banked lay-out
+# .y = UBI system upgrade image, containing cfe, kernel & UBIFS data,
+#      cannot be used with CFE (this image type is deprecated).
+# .y2 = UBI upgrade image for use with CFE or sysupgrade, containing cfe,
+#      kernel & UBI data
 #
-# All image types have an image tag attached to the end. The tag includes
+# The Broadcom images have an image tag attached to the end. The tag includes
 # compatibility information and a CRC of the complete image.
 #
-# The .w and .x images contain a complete boot block (eraseblock 0) image
+# The .w image contains a complete boot block (eraseblock 0) image
 # followed by N complete eraseblocks of JFFS2 or nvram+JFFS2+UBI data and
-# finally board and cusomer tags.
+# finally board and customer tags.
 #
-# The .y and .z images use a header containing the size of each component that
-# is included (or zero for components not included). The header is followed
-# by the included components in a fixed predefined order.
+# The .y and .y2 images use an Inteno invented header containing some
+# compatibility information and the size of each component that is included
+# (or zero for components not included). The header is followed by the
+# included components in a fixed predefined order.
 #
 
 define Image/Prepare
@@ -66,12 +70,12 @@ define Image/Prepare
 	# Called before any rootfs images are built
 	echo "In Image/prepare $(1) $(2)"
 
-	# compressed kernel (.w.x.y)
+	# compressed kernel (.w.y.y2)
 	$(STAGING_DIR_HOST)/bin/lzma e -d22 -lp2 -lc1 $(KDIR)/vmlinux.bcm $(KDIR)/vmlinux.lzma
 	$(STAGING_DIR_HOST)/bin/imagetag_nand $(IMAGETAG_KERNEL_ARGS)
 
     ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
-	# make kernel jffs2 image (.x.y)
+	# make kernel jffs2 image (.y.y2)
 	mkdir -p $(KDIR)/kernel_fs
 	cp $(KDIR)/vmlinux.lz $(KDIR)/kernel_fs/
 	touch $(KDIR)/kernel_fs/$(CFERAM_FILENAME)
@@ -104,14 +108,14 @@ define Image/Prepare
 	echo -e "/$(CFERAM_FILENAME)" >> $(KDIR)/nocomprlist
 	echo -e "/vmlinux.lz" >> $(KDIR)/nocomprlist
 
-	# add "first boot" marker (.w.x.y)
+	# add "first boot" marker (.w.y.y2)
 	touch $(TARGET_DIR)/IOP3
 
 	# add kernel and cferam flag (.w)
 	touch $(TARGET_DIR)/$(CFERAM_FILENAME)
 	cp $(KDIR)/vmlinux.lz $(TARGET_DIR)/
 
-	# add/set version info (.w.x.y)
+	# add/set version info (.w.y.y2)
 	sed -i 's/^IOP Version.*/IOP Version: $(IHGSP_BUILD_VERSION)/gi' $(BUILD_DIR_ROOT)/etc/banner
 	sed -i 's/^BrcmRef Base.*/BrcmRef Base: $(BRCMREF_STR)/gi' $(BUILD_DIR_ROOT)/etc/banner
 	#sed -i '7iIOP Version: $(IHGSP_BUILD_VERSION)' $(BUILD_DIR_ROOT)/etc/banner
@@ -120,7 +124,7 @@ define Image/Prepare
 #	echo $(CONFIG_TARGET_IBOARDID)> $(BUILD_DIR_ROOT)/lib/db/version/iop_iboardid
 	echo $(CONFIG_TARGET_CUSTOMER)> $(BUILD_DIR_ROOT)/lib/db/version/iop_customer
 
-	# strip out unneeded files (.w.x.y)
+	# strip out unneeded files (.w.y.y2)
 	rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.3.8
 	rm -rf $(BUILD_DIR_ROOT)/usr/lib/libvorbisenc*
 
@@ -162,13 +166,14 @@ define Image/Prepare
 endef
 
 define Image/Build/Header
-	# Args: $1=header $2=cfe $3=kernel $4=ubifs
+	# Args: $1=header $2=cfe $3=kernel $4=ubifs $5=ubi
 	# Any unused arguments should be passed as 'void'
 
-	echo "In Image/Build/Header $(1) $(2) $(3) $(4)"
+	echo "In Image/Build/Header $(1) $(2) $(3) $(4) $(5)"
 
 	truncate --size=0 $(KDIR)/void
 	echo "IntenoBlob" > $(KDIR)/hdr
+	echo "version $(HEADER_VERSION)" >> $(KDIR)/hdr
 	echo "integrity MD5SUM" >> $(KDIR)/hdr
 	echo "board $(BOARD_ID)" >> $(KDIR)/hdr
 	echo "chip $(CONFIG_BCM_CHIP_ID)" >> $(KDIR)/hdr
@@ -177,6 +182,7 @@ define Image/Build/Header
 	echo "cfe $$$$(ls -l $(KDIR)/$(2) | awk '{print $$$$5}')" >> $(KDIR)/hdr
 	echo "vmlinux $$$$(ls -l $(KDIR)/$(3) | awk '{print $$$$5}')" >> $(KDIR)/hdr
 	echo "ubifs $$$$(ls -l $(KDIR)/$(4) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "ubi $$$$(ls -l $(KDIR)/$(5) | awk '{print $$$$5}')" >> $(KDIR)/hdr
     ifeq ($(CONFIG_SMIMEOPT),y)
 	echo "sig 256" >> $(KDIR)/hdr
     endif
@@ -195,7 +201,7 @@ define Image/Build/CFE
     ifeq (1,0)
     ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
 	# Make header (.z)
-	$(call Image/Build/Header,header.z,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,void,void)
+	$(call Image/Build/Header,header.z,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,void,void,void)
 
 	# Concat header and cfe together (.z)
 	cat $(KDIR)/header.z \
@@ -244,39 +250,31 @@ define Image/Build/ubi
 
 	echo "In Image/Build/ubi $(1) $(2)"
 
-	cat /dev/zero | tr "\000" "\377" \
-		| head --bytes=$$$$((84*131072)) > $(KDIR)/lotsof.ff
+	# Make header (.y2)
+	$(call Image/Build/Header,header.y2,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,void,root.ubi)
 
-	# make nvram2 image (.x)
-	echo 'NVRAM' > $(KDIR)/nvram_marker
-	cat $(KDIR)/nvram_marker $(KDIR)/lotsof.ff \
-		| head --bytes=131072 > $(KDIR)/nvram.bin
-
-    ifeq (1,0)
-	# Concat cfe, nvram, vmlinux and ubi images together (.x)
-	cat $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_cfe \
-	    $(KDIR)/nvram.bin \
-	    $(KDIR)/nvram.bin \
-	    $(KDIR)/nvram.bin \
+	# Concat header, cfe, vmlinux and ubi together (.y2)
+	cat $(KDIR)/header.y2 \
+	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 	    $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/lotsof.ff \
-	    | head --bytes=$$$$((84*131072)) > $(KDIR)/temp_x.img
-	cat $(KDIR)/temp_x.img \
-	    $(KDIR)/root.ubi > $(KDIR)/cfe_nvram_vmlinux_ubi_image_128
+	    $(KDIR)/root.ubi > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
 
-	rm $(KDIR)/temp_x.img
-
-	# Tag the combined image (.x)
-	$(STAGING_DIR_HOST)/bin/imagetag_nand \
-		-f $(KDIR)/cfe_nvram_vmlinux_ubi_image_128 \
-		-o $(BIN_DIR)/$(IHGSP_BUILD_VERSION).x \
-		$(IMAGETAG_IMAGE_ARGS)
+	# If build is signed also sign the cfe,kernel,fs part of the image.
+    ifeq ($(CONFIG_SMIMEOPT),y)
+	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
+	    $(KDIR)/vmlinux.jffs2 \
+	    $(KDIR)/root.ubi | \
+	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
+	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
     endif
 
-	rm $(KDIR)/lotsof.ff
+	# Attach checksum to combined image (.y2)
+	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2 |awk '{printf "%s",$$$$1}' \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
 
 	# Make header (.y)
-	$(call Image/Build/Header,header.y,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,root.ubifs)
+	$(call Image/Build/Header,header.y,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,root.ubifs,void)
 
 	# Concat header, cfe, vmlinux and ubifs together (.y)
 	cat $(KDIR)/header.y \
@@ -284,7 +282,7 @@ define Image/Build/ubi
 	    $(KDIR)/vmlinux.jffs2 \
 	    $(KDIR)/root.ubifs > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
 
-# If build is signed also sign the cfe,kernel,fs part of the image.
+	# If build is signed also sign the cfe,kernel,fs part of the image.
     ifeq ($(CONFIG_SMIMEOPT),y)
 	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 	    $(KDIR)/vmlinux.jffs2 \
