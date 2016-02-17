@@ -37,6 +37,13 @@ config TARGET_CFERAM_EXT
 	help
 		The extension to use for the root FS /cferam.xxx file, e.g. "001"
 
+config TARGET_NO_1STBOOT_MARK
+	bool "Don't add 'first boot' marker to root FS"
+	default n
+	help
+		Don't add the empty file '/IOP3' to the root file system to indicate first boot.
+		This is useful to prevent production test SW from mounting other partition.
+
 config TARGET_NO_BLUETOOTH
 	bool "Exclude Bluetooth"
 	default n

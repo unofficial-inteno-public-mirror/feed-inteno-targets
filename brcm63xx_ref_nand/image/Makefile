@@ -108,8 +108,10 @@ define Image/Prepare
 	echo -e "/$(CFERAM_FILENAME)" >> $(KDIR)/nocomprlist
 	echo -e "/vmlinux.lz" >> $(KDIR)/nocomprlist
 
+    ifneq ($(CONFIG_TARGET_NO_1STBOOT_MARK),y)
 	# add "first boot" marker (.w.y.y2)
 	touch $(TARGET_DIR)/IOP3
+    endif
 
 	# add kernel and cferam flag (.w)
 	touch $(TARGET_DIR)/$(CFERAM_FILENAME)
