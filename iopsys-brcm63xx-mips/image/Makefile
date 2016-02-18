@@ -4,6 +4,11 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+
+# These variables need to be defined before including image.mk to have any effect
+NAND_BLOCKSIZE := 2048-128k
+JFFS2_BLOCKSIZE := 128k
+
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 IHGSP_VERSION:=$(CONFIG_TARGET_MODEL_NAME)_$(CONFIG_TARGET_CUSTOMER)$(CONFIG_TARGET_VERSION)-$(shell date '+%y%m%d_%H%M')
@@ -39,7 +44,7 @@ else
 BRCMREF_STR := <FIXME!>
 endif
 
-JFFS2_BLOCKSIZE := 128k
+
 
 #use the sortlist to have cfe and kernel first
 JFFS2OPTS += -S $(KDIR)/sortlist
@@ -50,7 +55,7 @@ JFFS2OPTS += -N $(KDIR)/nocomprlist
 #don't use the default device_table in $(INCLUDE_DIR)/device_table.txt
 MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
-NAND_BLOCKSIZE := 2048:128k
+
 
 # NOTE:
 #
