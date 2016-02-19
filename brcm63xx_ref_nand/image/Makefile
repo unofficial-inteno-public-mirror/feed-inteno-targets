@@ -76,6 +76,7 @@ define Image/Prepare
 
     ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
 	# make kernel jffs2 image (.y.y2)
+	rm -rf $(KDIR)/kernel_fs
 	mkdir -p $(KDIR)/kernel_fs
 	cp $(KDIR)/vmlinux.lz $(KDIR)/kernel_fs/
 	touch $(KDIR)/kernel_fs/$(CFERAM_FILENAME)
