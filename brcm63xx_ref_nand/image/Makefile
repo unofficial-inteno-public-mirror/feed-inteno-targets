@@ -150,16 +150,19 @@ define Image/Prepare
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/extra/endpointdd.ko
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/extra/dect.ko
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/extra/dectshim.ko
+		sed -i '/dect\.ko/d' $(BUILD_DIR_ROOT)/lib/bcm-base-drivers.sh
+		sed -i '/dectshim\.ko/d' $(BUILD_DIR_ROOT)/lib/bcm-base-drivers.sh
     endif
 
     ifeq ($(CONFIG_TARGET_NO_DECT),y)
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/extra/dect.ko
-		#rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/extra/dectshim.ko
+		sed -i '/dect\.ko/d' $(BUILD_DIR_ROOT)/lib/bcm-base-drivers.sh
     endif
 
     ifeq ($(CONFIG_TARGET_NO_DHD),y)
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/extra/dhd.ko
 		rm -rf $(BUILD_DIR_ROOT)/etc/wlan/dhd
+		sed -i '/dhd\.ko/d' $(BUILD_DIR_ROOT)/lib/bcm-base-drivers.sh
     endif
 
     ifeq ($(CONFIG_TARGET_NO_BLUETOOTH),y)
