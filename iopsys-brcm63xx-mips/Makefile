@@ -47,6 +47,11 @@ config 	BUSYBOX_DEFAULT_BRCTL
 	bool
 	default n if TARGET_iopsys_brcm63xx_mips
 
+# brcm has it's own brctl
+config 	BUSYBOX_DEFAULT_IFCONFIG
+	bool
+	default n if TARGET_iopsys_brcm63xx_mips
+
 config 	BCM_CFE_PASSWORD
 	string
 	default "" if TARGET_iopsys_brcm63xx_mips
