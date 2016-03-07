@@ -9,6 +9,9 @@
 NAND_BLOCKSIZE := 2048-128k
 JFFS2_BLOCKSIZE := 128k
 
+#don't use the default device_table in $(INCLUDE_DIR)/device_table.txt
+MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
+
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 IHGSP_VERSION:=$(CONFIG_TARGET_MODEL_NAME)_$(CONFIG_TARGET_CUSTOMER)$(CONFIG_TARGET_VERSION)-$(shell date '+%y%m%d_%H%M')
@@ -52,8 +55,6 @@ JFFS2OPTS += -S $(KDIR)/sortlist
 # KEN: why do we have it in KDIR ???
 JFFS2OPTS += -N $(KDIR)/nocomprlist
 
-#don't use the default device_table in $(INCLUDE_DIR)/device_table.txt
-MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
 
 
