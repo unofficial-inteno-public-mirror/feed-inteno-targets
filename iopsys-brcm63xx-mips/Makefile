@@ -36,7 +36,7 @@ config TARGET_iopsys_brcm63xx_mips
 
 config 	KERNEL_GIT_CLONE_URI
 	string
-	default "git@ihgsp.inteno.se:bcmlinux.git" if TARGET_iopsys_brcm63xx_mips
+	default "git@private.inteno.se:bcmlinux.git" if TARGET_iopsys_brcm63xx_mips
 
 config 	KERNEL_GIT_BRANCH
 	string
