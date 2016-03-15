@@ -8,16 +8,20 @@ include $(TOPDIR)/rules.mk
 
 ARCH:=mips
 BOARD:=iopsys-brcm63xx-mips
-BOARDNAME:=Broadcom BCM63xx_ref_nand
-FEATURES:=
-LINUX_VERSION:=3.3.8
+BOARDNAME:=Iopsys Broadcom MIPS
+FEATURES:=usb jffs2_nand nand ubifs
 MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
+
+KERNEL_PATCHVER:=3.4
+LINUX_VERSION-3.4 = .11
 
 include $(INCLUDE_DIR)/target.mk
 
 define Target/Description
 	Build firmware images for Broadcom based xDSL/routers
-	based on the Broadcom 4.14 SDK
+	based on the Broadcom SDK
 endef
+
+DEFAULT_PACKAGES += bcmkernel bcmhotproxy brcm_fw_tool brcminfo mcpd
 
 $(eval $(call BuildTarget))
