@@ -12,8 +12,7 @@ BOARDNAME:=Iopsys Broadcom MIPS
 FEATURES:=usb jffs2_nand nand ubifs
 MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
 
-KERNEL_PATCHVER:=3.4
-LINUX_VERSION-3.4 = .11
+LINUX_VERSION:=3.4.11
 
 include $(INCLUDE_DIR)/target.mk
 
