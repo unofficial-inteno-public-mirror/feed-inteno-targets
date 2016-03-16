@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2006-2009 OpenWrt.org
+# Copyright (C) Inteno Broadband AB
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
@@ -11,6 +11,7 @@ BOARD:=iopsys-brcm63xx-mips
 BOARDNAME:=Iopsys Broadcom MIPS
 FEATURES:=usb jffs2_nand nand ubifs
 MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
+CFLAGS:=-Os -pipe -mips32 -mtune=mips32 -fno-caller-saves
 
 LINUX_VERSION:=3.4.11
 
