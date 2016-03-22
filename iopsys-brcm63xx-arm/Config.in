@@ -26,13 +26,6 @@ config 	BUSYBOX_DEFAULT_IFCONFIG
 	bool
 	default n if TARGET_iopsys_brcm63xx_arm
 
-config 	BCM_CFE_PASSWORD
-	string
-	default "" if TARGET_iopsys_brcm63xx_arm
-
-config 	BCM_BLNAND
-	string
-	default "0" if TARGET_iopsys_brcm63xx_arm
 
 	
 
