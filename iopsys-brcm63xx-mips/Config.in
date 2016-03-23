@@ -1,5 +1,4 @@
 
-comment "Target options"
 
 # target config
 config TARGET_iopsys_brcm63xx_mips
@@ -25,4 +24,42 @@ config 	BUSYBOX_DEFAULT_BRCTL
 config 	BUSYBOX_DEFAULT_IFCONFIG
 	bool
 	default n if TARGET_iopsys_brcm63xx_mips
+
+
+# profile defaults
+config TARGET_iopsys_brcm63xx_mips_cg300
+	bool
+	select TARGET_NO_DSL
+	select BCM_I2C
+
+config TARGET_iopsys_brcm63xx_mips_cg301
+	bool
+	select TARGET_NO_DSL
+	select BCM_I2C
+	select BCM_BLUETOOTH
+	select PACKAGE_bluez
+
+config TARGET_MODEL_NAME
+	string
+	prompt "Model name + configuration" if TARGET_iopsys_brcm63xx_mips_Default
+	default "CG300-WU21U" if TARGET_iopsys_brcm63xx_mips_cg300
+	default "CG301-WU21U" if TARGET_iopsys_brcm63xx_mips_cg301
+	help
+		First part of image name
+
+config TARGET_IBOARDID
+	string
+	prompt "Board ID" if TARGET_iopsys_brcm63xx_mips_Default
+	default "CG300" if TARGET_iopsys_brcm63xx_mips_cg300
+	default "CG301" if TARGET_iopsys_brcm63xx_mips_cg301
+	help
+		4 letter id code used in the trailer or header to ensure the firmware to be flashed
+		is for the correct board. This id is also used in the bcmkernel package to ensure
+		that proper data tables are used when applicable. For example:
+		D301 -> DG301
+		VG50 -> VG50
+		D201 -> DG201
+
+
+
 
