@@ -1,12 +1,6 @@
 
 
 # target config
-config TARGET_iopsys_brcm63xx_mips
-	bool
-	select BRCM_SDK_VER_416040
-	select BCM_ENDPOINT_MODULE
-	select BCM_I2C
-
 config 	KERNEL_GIT_CLONE_URI
 	string
 	default "git@public.inteno.se:bcmlinux.git" if TARGET_iopsys_brcm63xx_mips
@@ -24,20 +18,6 @@ config 	BUSYBOX_DEFAULT_BRCTL
 config 	BUSYBOX_DEFAULT_IFCONFIG
 	bool
 	default n if TARGET_iopsys_brcm63xx_mips
-
-
-# profile defaults
-config TARGET_iopsys_brcm63xx_mips_cg300
-	bool
-	select TARGET_NO_DSL
-	select BCM_I2C
-
-config TARGET_iopsys_brcm63xx_mips_cg301
-	bool
-	select TARGET_NO_DSL
-	select BCM_I2C
-	select BCM_BLUETOOTH
-	select PACKAGE_bluez
 
 config BCM_KERNEL_PROFILE
        string
