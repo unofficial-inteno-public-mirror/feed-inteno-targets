@@ -27,7 +27,6 @@ config BCM_KERNEL_PROFILE
        default "963268GWV" if TARGET_iopsys_brcm63xx_mips_dg200
        default "963268GWV" if TARGET_iopsys_brcm63xx_mips_dg200al
        default "963268GWV" if TARGET_iopsys_brcm63xx_mips_dg301al
-       default "963268GWV" if TARGET_iopsys_brcm63xx_mips_dg351
        default "963268GWV" if TARGET_iopsys_brcm63xx_mips_eg200
        default "963268GWV" if TARGET_iopsys_brcm63xx_mips_eg300
        default "963268GWV" if TARGET_iopsys_brcm63xx_mips_vg50
@@ -45,7 +44,6 @@ config BCM_CHIP_ID
        default "63268" if TARGET_iopsys_brcm63xx_mips_dg200
        default "63268" if TARGET_iopsys_brcm63xx_mips_dg200al
        default "63268" if TARGET_iopsys_brcm63xx_mips_dg301al
-       default "63268" if TARGET_iopsys_brcm63xx_mips_dg351
        default "63268" if TARGET_iopsys_brcm63xx_mips_eg200
        default "63268" if TARGET_iopsys_brcm63xx_mips_eg300
        default "63268" if TARGET_iopsys_brcm63xx_mips_vg50
@@ -65,14 +63,13 @@ config TARGET_MODEL_NAME
 	default "DG200-WU7P2U" if TARGET_iopsys_brcm63xx_mips_dg200
 	default "DG200AL-WU7U" if TARGET_iopsys_brcm63xx_mips_dg200al
 	default "DG301AL-WU7U" if TARGET_iopsys_brcm63xx_mips_dg301al
-	default "DG350-WU7U" if TARGET_iopsys_brcm63xx_mips_dg351
 	default "EG200-WU7P1U" if TARGET_iopsys_brcm63xx_mips_eg200
 	default "EG300-WU21U" if TARGET_iopsys_brcm63xx_mips_eg300
 	default "DG301-W7P2U" if TARGET_iopsys_brcm63xx_mips_dg301
 	default "VG50-WU7U" if TARGET_iopsys_brcm63xx_mips_vg50
 	default "VOX25-WU7P2U" if TARGET_iopsys_brcm63xx_mips_vox25
 	default "DG150-WU7P2U" if TARGET_iopsys_brcm63xx_mips_dg150
-	default "DG150ALV2-WU7U" if TARGET_iopsys_brcm63xx_mips_dg150v2
+	default "DG150V2-WU7P2U" if TARGET_iopsys_brcm63xx_mips_dg150v2
 	default "DG400-WU7U" if TARGET_iopsys_brcm63xx_mips_dg400
 
 	help
@@ -87,7 +84,6 @@ config TARGET_IBOARDID
 	default "DG200" if TARGET_iopsys_brcm63xx_mips_dg200
 	default "DG200AL" if TARGET_iopsys_brcm63xx_mips_dg200al
 	default "DG301AL" if TARGET_iopsys_brcm63xx_mips_dg301al
-	default "DG350" if TARGET_iopsys_brcm63xx_mips_dg351
 	default "EG200" if TARGET_iopsys_brcm63xx_mips_eg200
 	default "EG300" if TARGET_iopsys_brcm63xx_mips_eg300
 	default "D301" if TARGET_iopsys_brcm63xx_mips_dg301

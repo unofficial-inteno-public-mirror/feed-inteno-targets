@@ -9,11 +9,17 @@ asterisk18-mod-func-shell asterisk18-mod-pbx-spool asterisk18-mod-res-stun \
 asterisk18-mod-res-voice asterisk18-mod-sounds
 
 VOICE_SUPPORT:=luci-app-voice luci-app-voice-client voice-client endptcfg $(ASTERISK_PACKAGES)
-DECT_SUPPORT:=natalie-dect dectmngr luci-app-dect
+DECT_SUPPORT:=natalie-dect dectmngr luci-app-dect libevent2
 
 define Profile/cg300
   NAME:=cg300
   PACKAGES:=$(VOICE_SUPPORT) $(DECT_SUPPORT)
+endef
+
+define Profile/cg300/Config
+select TARGET_NO_DSL
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/cg300/Description
@@ -29,7 +35,10 @@ define Profile/cg301
 endef
 
 define Profile/cg301/Config
-  select TARGET_NO_DECT
+select TARGET_NO_DSL
+select BCM_I2C
+select BCM_BLUETOOTH
+select BCM_ENDPOINT_MODULE
 endef
 
 
@@ -46,7 +55,9 @@ define Profile/dg150
 endef
 
 define Profile/dg150/Config
-  select TARGET_NO_DECT
+select TARGET_NO_DECT
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/dg150/Description
@@ -62,7 +73,9 @@ define Profile/dg150v2
 endef
 
 define Profile/dg150v2/Config
-  select TARGET_NO_DECT
+select TARGET_NO_DECT
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/dg150v2/Description
@@ -78,8 +91,9 @@ define Profile/dg200
 endef
 
 define Profile/dg200/Config
-  select TARGET_NO_DECT
-  select BCM_I2C
+select TARGET_NO_DECT
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/dg200/Description
@@ -91,11 +105,12 @@ $(eval $(call Profile,dg200))
 
 define Profile/dg200al
   NAME:=dg200al
+  PACKAGES:=
 endef
 
 define Profile/dg200al/Config
-  select TARGET_NO_VOICE
-  select BCM_I2C
+select TARGET_NO_VOICE
+select BCM_I2C
 endef
 
 define Profile/dg200al/Description
@@ -110,6 +125,11 @@ define Profile/dg301
   PACKAGES:=$(VOICE_SUPPORT) $(DECT_SUPPORT)
 endef
 
+define Profile/dg301/Config
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
+endef
+
 define Profile/dg301/Description
 	dg301 profile
 endef
@@ -119,10 +139,12 @@ $(eval $(call Profile,dg301))
 
 define Profile/dg301al
   NAME:=dg301al
+  PACKAGES:=
 endef
 
 define Profile/dg301al/Config
-  select TARGET_NO_VOICE
+select TARGET_NO_VOICE
+select BCM_I2C
 endef
 
 define Profile/dg301al/Description
@@ -138,7 +160,8 @@ define Profile/eg200
 endef
 
 define Profile/eg200/Config
-  select BCM_I2C
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/eg200/Description
@@ -154,8 +177,9 @@ define Profile/eg300
 endef
 
 define Profile/eg300/Config
-  select TARGET_NO_DSL
-  select BCM_I2C
+select TARGET_NO_DSL
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/eg300/Description
@@ -167,11 +191,14 @@ $(eval $(call Profile,eg300))
 
 define Profile/vg50
   NAME:=vg50
+  PACKAGES:=
 endef
 
 define Profile/vg50/Config
-  select TARGET_NO_DHD
-  select TARGET_NO_VOICE
+select TARGET_NO_DHD
+select TARGET_NO_VOICE
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/vg50/Description
@@ -187,9 +214,11 @@ define Profile/vox25
 endef
 
 define Profile/vox25/Config
-  select TARGET_NO_DHD
-  select TARGET_NO_DECT
-  select TARGET_NO_BLUETOOTH
+select TARGET_NO_DHD
+select TARGET_NO_DECT
+select TARGET_NO_BLUETOOTH
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
 endef
 
 define Profile/vox25/Description
