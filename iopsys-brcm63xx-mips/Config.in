@@ -34,7 +34,7 @@ config BCM_KERNEL_PROFILE
 
        default "96362GWV" if TARGET_iopsys_brcm63xx_mips_dg150
        default "963381GWV" if TARGET_iopsys_brcm63xx_mips_dg150v2
-       default "963138BGWV" if TARGET_iopsys_brcm63xx_mips_dg400
+
 
 config BCM_CHIP_ID
        string
@@ -51,7 +51,6 @@ config BCM_CHIP_ID
 
        default "6362" if TARGET_iopsys_brcm63xx_mips_dg150
        default "63381" if TARGET_iopsys_brcm63xx_mips_dg150v2
-       default "63138" if TARGET_iopsys_brcm63xx_mips_dg400
 
 
 config TARGET_MODEL_NAME
@@ -70,7 +69,6 @@ config TARGET_MODEL_NAME
 	default "VOX25-WU7P2U" if TARGET_iopsys_brcm63xx_mips_vox25
 	default "DG150-WU7P2U" if TARGET_iopsys_brcm63xx_mips_dg150
 	default "DG150V2-WU7P2U" if TARGET_iopsys_brcm63xx_mips_dg150v2
-	default "DG400-WU7U" if TARGET_iopsys_brcm63xx_mips_dg400
 
 	help
 		First part of image name
@@ -91,8 +89,6 @@ config TARGET_IBOARDID
 	default "VOX25" if TARGET_iopsys_brcm63xx_mips_vox25
 	default "D150" if TARGET_iopsys_brcm63xx_mips_dg150
 	default "DG150V2" if TARGET_iopsys_brcm63xx_mips_dg150v2
-	default "DG400" if TARGET_iopsys_brcm63xx_mips_dg400
-
 
 	help
 		4 letter id code used in the trailer or header to ensure the firmware to be flashed

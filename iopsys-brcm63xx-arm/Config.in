@@ -2,15 +2,9 @@
 comment "Target options"
 
 # target config
-config TARGET_iopsys_brcm63xx_arm
-	bool
-	select BRCM_SDK_VER_416040
-	select BCM_ENDPOINT_MODULE
-	select BCM_I2C
-
 config 	KERNEL_GIT_CLONE_URI
 	string
-	default "git@private.inteno.se:bcmlinux.git" if TARGET_iopsys_brcm63xx_arm
+	default "git@public.inteno.se:bcmlinux.git" if TARGET_iopsys_brcm63xx_arm
 
 config 	KERNEL_GIT_BRANCH
 	string
@@ -30,3 +24,23 @@ config 	BUSYBOX_DEFAULT_IFCONFIG
 	
 
 
+config BCM_KERNEL_PROFILE
+       string
+
+       default "963138BGWV" if TARGET_iopsys_brcm63xx_arm_dg400
+
+config BCM_CHIP_ID
+       string
+
+       default "63138" if TARGET_iopsys_brcm63xx_arm_dg400
+
+
+config TARGET_MODEL_NAME
+	string
+
+	default "DG400-WU7U" if TARGET_iopsys_brcm63xx_arm_dg400
+
+config TARGET_IBOARDID
+	string
+
+	default "DG400" if TARGET_iopsys_brcm63xx_arm_dg400
