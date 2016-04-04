@@ -9,7 +9,7 @@ asterisk18-mod-func-shell asterisk18-mod-pbx-spool asterisk18-mod-res-stun \
 asterisk18-mod-res-voice asterisk18-mod-sounds
 
 VOICE_SUPPORT:=luci-app-voice luci-app-voice-client voice-client endptcfg $(ASTERISK_PACKAGES)
-DECT_SUPPORT:=natalie-dect dectmngr2 luci-app-dect
+DECT_SUPPORT:=dectmngr2 luci-app-dect
 
 define Profile/dg400
   NAME:=dg400
@@ -18,6 +18,7 @@ endef
 
 define Profile/dg400/Config
 select BCM_ENDPOINT_MODULE
+select TARGET_NO_DECT
 endef
 
 define Profile/dg400/Description
