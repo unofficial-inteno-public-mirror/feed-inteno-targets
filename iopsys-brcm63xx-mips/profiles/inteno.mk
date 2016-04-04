@@ -8,8 +8,8 @@ asterisk18-mod-format-sln16 asterisk18-mod-func-channel asterisk18-mod-func-db \
 asterisk18-mod-func-shell asterisk18-mod-pbx-spool asterisk18-mod-res-stun \
 asterisk18-mod-res-voice asterisk18-mod-sounds
 
-VOICE_SUPPORT:=luci-app-voice luci-app-voice-client voice-client endptcfg $(ASTERISK_PACKAGES)
-DECT_SUPPORT:=natalie-dect dectmngr2 luci-app-dect
+VOICE_SUPPORT:=voice-client endptcfg $(ASTERISK_PACKAGES) juci-inteno-voice-client
+DECT_SUPPORT:=natalie-dect dectmngr2 juci-natalie-dect
 
 define Profile/cg300
   NAME:=cg300
@@ -173,7 +173,7 @@ $(eval $(call Profile,eg200))
 
 define Profile/eg300
   NAME:=eg300
-  PACKAGES:=$(VOICE_SUPPORT) $(DECT_SUPPORT) catv luci-app-catv luci-app-sfp
+  PACKAGES:=$(VOICE_SUPPORT) $(DECT_SUPPORT) catv juci-catv juci-sfp
 endef
 
 define Profile/eg300/Config

@@ -8,8 +8,8 @@ asterisk18-mod-format-sln16 asterisk18-mod-func-channel asterisk18-mod-func-db \
 asterisk18-mod-func-shell asterisk18-mod-pbx-spool asterisk18-mod-res-stun \
 asterisk18-mod-res-voice asterisk18-mod-sounds
 
-VOICE_SUPPORT:=luci-app-voice luci-app-voice-client voice-client endptcfg $(ASTERISK_PACKAGES)
-DECT_SUPPORT:=dectmngr2 luci-app-dect
+VOICE_SUPPORT:=voice-client endptcfg $(ASTERISK_PACKAGES) juci-inteno-voice-client
+DECT_SUPPORT:=dectmngr2 juci-natalie-dect
 
 define Profile/dg400
   NAME:=dg400
