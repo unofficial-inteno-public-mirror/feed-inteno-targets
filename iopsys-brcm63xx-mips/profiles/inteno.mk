@@ -85,6 +85,23 @@ endef
 $(eval $(call Profile,dg150v2))
 
 
+define Profile/dg150alv2
+  NAME:=dg200al
+  PACKAGES:=
+endef
+
+define Profile/dg150alv2/Config
+select TARGET_NO_VOICE
+select BCM_I2C
+endef
+
+define Profile/dg150alv2/Description
+	dg150alv2 profile
+endef
+
+$(eval $(call Profile,dg150alv2))
+
+
 define Profile/dg200
   NAME:=dg200
   PACKAGES:=$(VOICE_SUPPORT)
