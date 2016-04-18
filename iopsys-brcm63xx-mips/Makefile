@@ -22,6 +22,10 @@ define Target/Description
 	based on the Broadcom SDK
 endef
 
+define Target/Config
+	source "$(CURDIR)/Config.in"
+endef
+
 DEFAULT_PACKAGES += bcmkernel bcmhotproxy brcm_fw_tool brcminfo mcpd
 
 $(eval $(call BuildTarget))
