@@ -4,6 +4,9 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+
+NAND_BLOCKSIZE := 2048-128k
+
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 IHGSP_VERSION:=$(CONFIG_TARGET_MODEL_NAME)_$(CONFIG_TARGET_CUSTOMER)$(CONFIG_TARGET_VERSION)-$(shell date '+%y%m%d_%H%M')
@@ -18,6 +21,7 @@ BOARD_ID:=D301
 
 UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x lzma --squash-uids --nosquash-rino-perm
 UBI_OPTS = -v -m 2048 -p 128KiB
+
 
 ifeq ($(CONFIG_BCM_CHIP_ID),"63138")
 MKFS_JFFS2_ARGS      := --little-endian
@@ -227,9 +231,9 @@ define Image/Build/CFE
 	$(eval CFE_BUILT:=1)
 endef
 
-define Image/Build/jffs2-128k
+define Image/Build/jffs2-nand-2048-128k
 
-	echo "In Image/Build/jffs2-128k $(1) $(2)"
+	echo "In Image/Build/jffs2-nand-2048-128k $(1) $(2)"
 
 	#add jffs2 eof marker
 	cat $(KDIR)/jffs2_eof_marker_128k >> $(KDIR)/root.$(1)
