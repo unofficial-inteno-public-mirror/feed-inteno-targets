@@ -17,7 +17,7 @@ CFE_BUILT:=
 BOARD_ID:=D301
 
 UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x lzma --squash-uids --nosquash-rino-perm
-UBINIZE_OPTS = -v -m 2048 -p 128KiB
+UBI_OPTS = -v -m 2048 -p 128KiB
 
 ifeq ($(CONFIG_BCM_CHIP_ID),"63138")
 MKFS_JFFS2_ARGS      := --little-endian
