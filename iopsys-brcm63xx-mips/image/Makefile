@@ -6,6 +6,7 @@
 #
 
 NAND_BLOCKSIZE := 2048-128k
+MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
