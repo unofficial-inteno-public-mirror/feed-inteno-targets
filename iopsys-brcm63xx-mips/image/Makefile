@@ -20,7 +20,7 @@ CFERAM_FILENAME:=cferam.$(CONFIG_TARGET_CFERAM_EXT)
 CFE_BUILT:=
 BOARD_ID:=D301
 
-UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x lzma --squash-uids --nosquash-rino-perm
+UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x lzma --squash-uids --nosquash-rino-perm --devtable=$(CURDIR)/device_table.txt
 UBI_OPTS = -v -m 2048 -p 128KiB
 
 
