@@ -18,7 +18,6 @@ endef
 
 define Profile/dg400/Config
 select BCM_ENDPOINT_MODULE
-select TARGET_NO_DECT
 endef
 
 define Profile/dg400/Description
