@@ -12,6 +12,7 @@ config interface 'wan'
 	option vendorid 'Inteno_Repeater_$MAC4'
 	option hostname 'Inteno_Repeater_$MAC4'
 	option ifname 'eth0.1'
+	option reqopts '43'
 
 config interface 'lan'
 	option is_lan '1'

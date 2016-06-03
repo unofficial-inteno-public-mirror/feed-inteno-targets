@@ -21,7 +21,7 @@ config interface 'wan'
 	option vendorid '$HARDWAREID-INTENO'
 	option hostname 'Inteno_$MAC4'
 	option ifname 'ptm0.1 atm0.1 eth0.1'
-	option ipv6 '1'
+	option reqopts '43'
 
 config interface 'wan6'
 	option proto 'dhcpv6'
