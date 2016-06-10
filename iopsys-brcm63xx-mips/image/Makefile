@@ -15,7 +15,7 @@ IHGSP_BUILD_VERSION:=$(shell echo $(IHGSP_VERSION) | sed s/\"//g)
 BUILD_DIR_ROOT:=$(BUILD_DIR)/root-$(shell echo $(CONFIG_TARGET_BOARD) | sed s/\"//g)
 KERNEL_ENTRY:= $(shell readelf -h $(KDIR)/vmlinux.bcm.elf | grep Entry | awk '{print $$4}')
 
-HEADER_VERSION:=2
+HEADER_VERSION:=3
 CFERAM_FILENAME:=cferam.$(CONFIG_TARGET_CFERAM_EXT)
 CFE_BUILT:=
 BOARD_ID:=D301
@@ -134,6 +134,12 @@ define Image/Prepare
 #	echo $(CONFIG_TARGET_IBOARDID)> $(BUILD_DIR_ROOT)/lib/db/version/iop_iboardid
 	echo $(CONFIG_TARGET_CUSTOMER)> $(BUILD_DIR_ROOT)/lib/db/version/iop_customer
 
+	# extract package info
+	cat $(BUILD_DIR_ROOT)/usr/lib/opkg/status \
+	   | awk '/^Package:/ {printf "%s ",$$$$2} /^Version:/ {printf "%s\n",$$$$2}' \
+	   | sort \
+	   | awk '{printf "===Package start===\nPackage: %s\nVersion: %s\n===Package end===\n",$$$$1,$$$$2}' \
+	   > $(KDIR)/pkginfo
 
 	# strip out unneeded files (.w.y.y2)
 	rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11
@@ -181,10 +187,10 @@ define Image/Prepare
 endef
 
 define Image/Build/Header
-	# Args: $1=header $2=cfe $3=kernel $4=ubifs $5=ubi
+	# Args: $1=header $2=cfe $3=kernel $4=ubifs $5=ubi $6=pkginfo
 	# Any unused arguments should be passed as 'void'
 
-	echo "In Image/Build/Header $(1) $(2) $(3) $(4) $(5)"
+	echo "In Image/Build/Header $(1) $(2) $(3) $(4) $(5) $(6)"
 
 	truncate --size=0 $(KDIR)/void
 	echo "IntenoBlob" > $(KDIR)/hdr
@@ -192,12 +198,15 @@ define Image/Build/Header
 	echo "integrity MD5SUM" >> $(KDIR)/hdr
 	echo "board $(BOARD_ID)" >> $(KDIR)/hdr
 	echo "chip $(CONFIG_BCM_CHIP_ID)" >> $(KDIR)/hdr
+	echo "arch all $(CONFIG_TARGET_ARCH_PACKAGES)" >> $(KDIR)/hdr
 	echo "model $(CONFIG_TARGET_MODEL_NAME)" >> $(KDIR)/hdr
+	echo "release $(CONFIG_TARGET_VERSION)" >> $(KDIR)/hdr
 	echo "customer $(CONFIG_TARGET_CUSTOMER)" >> $(KDIR)/hdr
 	echo "cfe $$$$(ls -l $(KDIR)/$(2) | awk '{print $$$$5}')" >> $(KDIR)/hdr
 	echo "vmlinux $$$$(ls -l $(KDIR)/$(3) | awk '{print $$$$5}')" >> $(KDIR)/hdr
 	echo "ubifs $$$$(ls -l $(KDIR)/$(4) | awk '{print $$$$5}')" >> $(KDIR)/hdr
 	echo "ubi $$$$(ls -l $(KDIR)/$(5) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "pkginfo $$$$(ls -l $(KDIR)/$(6) | awk '{print $$$$5}')" >> $(KDIR)/hdr
     ifeq ($(CONFIG_SMIMEOPT),y)
 	echo "sig 256" >> $(KDIR)/hdr
     endif
@@ -216,7 +225,7 @@ define Image/Build/CFE
     ifeq (1,0)
     ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
 	# Make header (.z)
-	$(call Image/Build/Header,header.z,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,void,void,void)
+	$(call Image/Build/Header,header.z,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,void,void,void,void)
 
 	# Concat header and cfe together (.z)
 	cat $(KDIR)/header.z \
@@ -266,13 +275,14 @@ define Image/Build/ubi
 	echo "In Image/Build/ubi $(1) $(2)"
 
 	# Make header (.y2)
-	$(call Image/Build/Header,header.y2,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,void,root.ubi)
+	$(call Image/Build/Header,header.y2,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,void,root.ubi,pkginfo)
 
 	# Concat header, cfe, vmlinux and ubi together (.y2)
 	cat $(KDIR)/header.y2 \
 	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 	    $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/root.ubi > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
+	    $(KDIR)/root.ubi \
+	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
 
 	# If build is signed also sign the cfe,kernel,fs part of the image.
     ifeq ($(CONFIG_SMIMEOPT),y)
@@ -289,13 +299,14 @@ define Image/Build/ubi
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
 
 	# Make header (.y)
-	$(call Image/Build/Header,header.y,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,root.ubifs,void)
+	$(call Image/Build/Header,header.y,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,root.ubifs,void,pkginfo)
 
 	# Concat header, cfe, vmlinux and ubifs together (.y)
 	cat $(KDIR)/header.y \
 	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 	    $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/root.ubifs > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
+	    $(KDIR)/root.ubifs \
+	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
 
 	# If build is signed also sign the cfe,kernel,fs part of the image.
     ifeq ($(CONFIG_SMIMEOPT),y)
