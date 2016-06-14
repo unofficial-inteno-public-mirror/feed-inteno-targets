@@ -18,7 +18,6 @@ KERNEL_ENTRY:= $(shell readelf -h $(KDIR)/vmlinux.bcm.elf | grep Entry | awk '{p
 HEADER_VERSION:=3
 CFERAM_FILENAME:=cferam.$(CONFIG_TARGET_CFERAM_EXT)
 CFE_BUILT:=
-BOARD_ID:=D301
 
 UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x lzma --squash-uids --nosquash-rino-perm --devtable=$(CURDIR)/device_table.txt
 UBI_OPTS = -v -m 2048 -p 128KiB
@@ -31,7 +30,7 @@ IMAGETAG_IMAGE_ARGS  := -c $(CONFIG_BCM_CHIP_ID) -q NAND128 -L
 else
 MKFS_JFFS2_ARGS      := --big-endian
 IMAGETAG_KERNEL_ARGS := -K -i $(KDIR)/vmlinux.lzma -o $(KDIR)/vmlinux.lz -e $(KERNEL_ENTRY)
-IMAGETAG_IMAGE_ARGS  := -c $(CONFIG_BCM_CHIP_ID) -q NAND128 -b $(BOARD_ID)
+IMAGETAG_IMAGE_ARGS  := -c $(CONFIG_BCM_CHIP_ID) -q NAND128 -b D301
 endif
 
 ifeq ($(CONFIG_BRCM_SDK_VER_414040),y)
@@ -138,7 +137,7 @@ define Image/Prepare
 	cat $(BUILD_DIR_ROOT)/usr/lib/opkg/status \
 	   | awk '/^Package:/ {printf "%s ",$$$$2} /^Version:/ {printf "%s\n",$$$$2}' \
 	   | sort \
-	   | awk '{printf "===Package start===\nPackage: %s\nVersion: %s\n===Package end===\n",$$$$1,$$$$2}' \
+	   | awk '{printf "===Package start===\nPackage: %s\nVersion: %s\n",$$$$1,$$$$2}' \
 	   > $(KDIR)/pkginfo
 
 	# strip out unneeded files (.w.y.y2)
@@ -196,7 +195,7 @@ define Image/Build/Header
 	echo "IntenoBlob" > $(KDIR)/hdr
 	echo "version $(HEADER_VERSION)" >> $(KDIR)/hdr
 	echo "integrity MD5SUM" >> $(KDIR)/hdr
-	echo "board $(BOARD_ID)" >> $(KDIR)/hdr
+	echo "board $(CONFIG_TARGET_IBOARDID)" >> $(KDIR)/hdr
 	echo "chip $(CONFIG_BCM_CHIP_ID)" >> $(KDIR)/hdr
 	echo "arch all $(CONFIG_TARGET_ARCH_PACKAGES)" >> $(KDIR)/hdr
 	echo "model $(CONFIG_TARGET_MODEL_NAME)" >> $(KDIR)/hdr
