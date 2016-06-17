@@ -5,7 +5,7 @@
 # See /LICENSE for more information.
 #
 
-NAND_BLOCKSIZE := 2048-128k
+NAND_BLOCKSIZE := 4096-128k
 MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
 include $(TOPDIR)/rules.mk
@@ -90,7 +90,7 @@ define Image/Prepare
 	echo "/vmlinux.lz" >> $(KDIR)/nocomprlist
 	$(STAGING_DIR_HOST)/bin/mkfs.jffs2 \
 		$(MKFS_JFFS2_ARGS) \
-		-v -e 128KiB --squash --no-cleanmarkers \
+		-v -e 128KiB -s 4096 --squash --no-cleanmarkers \
 		--pad -N $(KDIR)/nocomprlist \
 		-d $(KDIR)/kernel_fs -o $(KDIR)/vmlinux.jffs2
     endif
