@@ -240,9 +240,9 @@ define Image/Build/CFE
 	$(eval CFE_BUILT:=1)
 endef
 
-define Image/Build/jffs2-nand-2048-128k
+define Image/Build/jffs2-nand-4096-128k
 
-	echo "In Image/Build/jffs2-nand-2048-128k $(1) $(2)"
+	echo "In Image/Build/jffs2-nand-4096-128k $(1) $(2)"
 
 	#add jffs2 eof marker
 	cat $(KDIR)/jffs2_eof_marker_128k >> $(KDIR)/root.$(1)
