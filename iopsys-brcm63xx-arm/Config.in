@@ -28,19 +28,24 @@ config BCM_KERNEL_PROFILE
        string
 
        default "963138BGWV" if TARGET_iopsys_brcm63xx_arm_dg400
+       default "963138BGWV" if TARGET_iopsys_brcm63xx_arm_eg400
 
 config BCM_CHIP_ID
        string
 
        default "63138" if TARGET_iopsys_brcm63xx_arm_dg400
+       default "63138" if TARGET_iopsys_brcm63xx_arm_eg400
 
 
 config TARGET_MODEL_NAME
 	string
 
 	default "DG400-WU7U" if TARGET_iopsys_brcm63xx_arm_dg400
+	default "EG400-WU21U" if TARGET_iopsys_brcm63xx_arm_eg400
 
 config TARGET_IBOARDID
 	string
 
 	default "DG400" if TARGET_iopsys_brcm63xx_arm_dg400
+	default "EG400" if TARGET_iopsys_brcm63xx_arm_eg400
+

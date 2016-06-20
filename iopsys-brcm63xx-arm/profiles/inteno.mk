@@ -28,3 +28,22 @@ endef
 $(eval $(call Profile,dg400))
 
 
+define Profile/eg400
+  NAME:=eg400
+  PACKAGES:=$(VOICE_SUPPORT) $(DECT_SUPPORT) catv juci-catv juci-sfp
+endef
+
+define Profile/eg400/Config
+select BCM_I2C
+select BCM_ENDPOINT_MODULE
+select TARGET_NO_DECT
+select TARGET_NO_DSL
+endef
+
+define Profile/eg400/Description
+	eg400 profile
+endef
+
+$(eval $(call Profile,eg400))
+
+
