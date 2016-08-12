@@ -5,7 +5,7 @@ config button RESET
 	option minpress 5000
 	option hotplug resetbutton
 
-config button DECT
+config button EXT
 	list button 9512_dect
 	option hotplug extbutton
 	option minpress 1000
