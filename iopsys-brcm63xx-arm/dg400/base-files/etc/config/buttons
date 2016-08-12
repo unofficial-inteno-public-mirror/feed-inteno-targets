@@ -21,8 +21,10 @@ config button WPS
 
 config button DECT
 	list button 9512_dect
-	option hotplug dectbutton
+	option hotplug dectshort
 	option minpress 1000
+	option hotplug_long dectlong
+	option longpress 8000
 
 config button EXT
 	list button 9512_ext
