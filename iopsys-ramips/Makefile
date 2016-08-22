@@ -7,11 +7,11 @@
 include $(TOPDIR)/rules.mk
 
 ARCH:=mipsel
-BOARD:=ramips
-BOARDNAME:=Ralink RT288x/RT3xxx
-SUBTARGETS:=rt305x mt7620 mt7621 mt7628 mt7688 rt3883 rt288x
+BOARD:=iopsys-ramips
+BOARDNAME:=Iopsys Ramips
+SUBTARGETS:=ex300
 FEATURES:=squashfs gpio
-MAINTAINER:=John Crispin <blogic@openwrt.org>
+MAINTAINER:=Jonas Höglund <jonas.hoglund@inteno.se>
 
 KERNEL_PATCHVER:=3.18
 
@@ -20,7 +20,7 @@ DEFAULT_PACKAGES += \
 	kmod-leds-gpio kmod-gpio-button-hotplug wpad-mini swconfig
 
 define Target/Description
-	Build firmware images for Ralink RT288x/RT3xxx based boards.
+	Build firmware images for Mediatek boards with drivers from the Mediatek STK.
 endef
 
 $(eval $(call BuildTarget))
