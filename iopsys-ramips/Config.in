@@ -3,7 +3,7 @@
 # target config
 config 	KERNEL_GIT_CLONE_URI
 	string
-	default "http://public.inteno.se/bcmlinux.git" if TARGET_iopsys_ramips_ex300
+	default "git@private.inteno.se:linux.git" if TARGET_iopsys_ramips_ex300
 
 config 	KERNEL_GIT_BRANCH
 	string
