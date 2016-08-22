@@ -10,12 +10,6 @@ config 	KERNEL_GIT_BRANCH
 	default "wifi" if TARGET_iopsys_ramips_ex300
 
 
-config TARGET_MODEL_NAME
-	string
-	default "EX300-WU21U" if TARGET_iopsys_ramips_ex300
-	help
-		First part of image name
-
 config TARGET_IBOARDID
 	string
 	default "EX300" if TARGET_iopsys_ramips_ex300
