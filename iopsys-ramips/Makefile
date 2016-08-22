@@ -23,4 +23,8 @@ define Target/Description
 	Build firmware images for Mediatek boards with drivers from the Mediatek STK.
 endef
 
+define Target/Config
+	source "$(CURDIR)/Config.in"
+endef
+
 $(eval $(call BuildTarget))
