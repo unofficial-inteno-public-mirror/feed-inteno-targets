@@ -10,6 +10,8 @@ CPU_TYPE:=1004kc
 CPU_SUBTYPE:=dsp
 CFLAGS:=-Os -pipe -mmt -mips32r2 -mtune=1004kc
 
+DEFAULT_PACKAGES += kmod-hwnat-mtk kmod-mt7603-mtk
+
 define Target/Description
 	Build firmware images for Ralink MT7621 based boards.
 endef
