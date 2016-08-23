@@ -27,6 +27,7 @@ DEVICE_VARS += DTS
 loadaddr-y := 0x80000000
 loadaddr-$(CONFIG_TARGET_ramips_rt288x) := 0x88000000
 loadaddr-$(CONFIG_TARGET_ramips_mt7621) := 0x80001000
+loadaddr-$(CONFIG_TARGET_iopsys_ramips_ex300) := 0x80001000
 
 KERNEL_LOADADDR := $(loadaddr-y)
 
@@ -951,6 +952,17 @@ define Image/Build/Profile/Default
 endef
 endif
 
+
+ifeq ($(SUBTARGET),ex300)
+  TARGET_DEVICES += ex300
+endif
+
+define Device/ex300
+  DTS := MT7621
+  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+endef
+
+
 #
 # MT7621 Profiles
 #
@@ -1071,5 +1083,6 @@ define Image/Prepare
 	$(CP) $(KDIR)/relocate/loader.bin $(KDIR)/loader.bin
 endef
 endif
+
 
 $(eval $(call BuildImage))
