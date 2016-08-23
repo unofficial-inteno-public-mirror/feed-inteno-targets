@@ -112,3 +112,15 @@ define KernelPackage/hwnat-mtk
 endef
 
 $(eval $(call KernelPackage,hwnat-mtk))
+
+
+define KernelPackage/mt7603-mtk
+  SUBMENU:=Other modules
+  TITLE:=Mediatek mt7603 driver
+  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex300
+  FILES:= \
+	$(LINUX_DIR)/drivers/net/wireless/rlt_wifi_ap/rlt_wifi.ko
+  AUTOLOAD:=$(call AutoLoad,60,rlt_wifi,1)
+endef
+
+$(eval $(call KernelPackage,mt7603-mtk))
