@@ -100,3 +100,15 @@ define KernelPackage/sound-mtk/description
 endef
 
 $(eval $(call KernelPackage,sound-mtk))
+
+
+define KernelPackage/hwnat-mtk
+  SUBMENU:=Other modules
+  TITLE:=Mediatek hardware NAT module
+  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex300
+  FILES:= \
+	$(LINUX_DIR)/net/nat/hw_nat/hw_nat.ko
+  AUTOLOAD:=$(call AutoLoad,60,hw_nat,1)
+endef
+
+$(eval $(call KernelPackage,hwnat-mtk))
