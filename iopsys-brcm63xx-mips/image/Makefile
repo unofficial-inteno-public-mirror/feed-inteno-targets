@@ -70,6 +70,15 @@ endif
 # (or zero for components not included). The header is followed by the
 # included components in a fixed predefined order.
 #
+# IMPORTANT:
+# Because of the incredible mess in the OpenWRT include/image-mk file, it
+# is currently necessary to have both CONFIG_TARGET_ROOTFS_JFFS2 and
+# CONFIG_TARGET_ROOTFS_UBIFS selected in .config. This is because the
+# Image/Build/jffs2-nand-4096-128k define below is responsible for deleting
+# vmlinux from the root fs. When we no longer build JFFS2 at all, vmlinux
+# could be deleted by Image/Prepare and CONFIG_TARGET_ROOTFS_JFFS2 could be
+# deselected.
+
 
 define Image/Prepare
 
@@ -216,25 +225,25 @@ define Image/Build/CFE
 
 	echo "In Image/Build/CFE $(1) $(2)"
 
+    ifeq ($(CONFIG_TARGET_IMAGE_CFE),y)
 	# Tag the (old style) cfe image
 	$(STAGING_DIR_HOST)/bin/imagetag_nand -f $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 		-o $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_cfe \
 		$(IMAGETAG_IMAGE_ARGS)
-
-    ifeq (1,0)
-    ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
-	# Make header (.z)
-	$(call Image/Build/Header,header.z,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,void,void,void,void)
-
-	# Concat header and cfe together (.z)
-	cat $(KDIR)/header.z \
-	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
-	    > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).z
-
-	# Attach checksum to combined image (.z)
-	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).z |awk '{printf "%s",$$$$1}' \
-		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).z
     endif
+
+    ifeq ($(CONFIG_TARGET_IMAGE_CFE_Y2),y)
+	# Make header (_cfe.y2)
+	$(call Image/Build/Header,header_cfe.y2,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,void,void,void,void)
+
+	# Concat header and cfe together (_cfe.y2)
+	cat $(KDIR)/header_cfe.y2 \
+	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
+	    > $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_cfe.y2
+
+	# Attach checksum to combined image (_cfe.y2)
+	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_cfe.y2 |awk '{printf "%s",$$$$1}' \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_cfe.y2
     endif
 
 	$(eval CFE_BUILT:=1)
@@ -247,19 +256,24 @@ define Image/Build/jffs2-nand-4096-128k
 	#add jffs2 eof marker
 	cat $(KDIR)/jffs2_eof_marker_128k >> $(KDIR)/root.$(1)
 
+    ifeq ($(CONFIG_TARGET_IMAGE_FS),y)
 	# Tag the rootfs image
 	$(STAGING_DIR_HOST)/bin/imagetag_nand -f $(KDIR)/root.$(1) \
 		-o $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs_image \
 		$(IMAGETAG_IMAGE_ARGS)
+    endif
 
+    ifeq ($(CONFIG_TARGET_IMAGE_W),y)
 	# Concat the cfe and rootfs together (.w)
-	cat $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_cfe \
-	    $(KDIR)/root.$(1) > $(KDIR)/cfe_fs_image_128
+	cat $(BIN_DIR)/$(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
+            $(KDIR)/file128k.tmp | head --bytes=131072 > $(KDIR)/cfe_fs_image_128
+	cat $(KDIR)/root.$(1) >> $(KDIR)/cfe_fs_image_128
 
 	# Tag the combined image (.w)
 	$(STAGING_DIR_HOST)/bin/imagetag_nand -f $(KDIR)/cfe_fs_image_128 \
 		-o $(BIN_DIR)/$(IHGSP_BUILD_VERSION).w \
 		$(IMAGETAG_IMAGE_ARGS)
+    endif
 
 	# DIRTY! DIRTY! DIRTY! DIRTY! DIRTY! DIRTY! DIRTY!
 	# kernel and cferam flag not needed in UBI file systems!
@@ -273,6 +287,7 @@ define Image/Build/ubi
 
 	echo "In Image/Build/ubi $(1) $(2)"
 
+    ifeq ($(CONFIG_TARGET_IMAGE_Y2),y)
 	# Make header (.y2)
 	$(call Image/Build/Header,header.y2,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,void,root.ubi,pkginfo)
 
@@ -284,19 +299,45 @@ define Image/Build/ubi
 	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
 
 	# If build is signed also sign the cfe,kernel,fs part of the image.
-    ifeq ($(CONFIG_SMIMEOPT),y)
+      ifeq ($(CONFIG_SMIMEOPT),y)
 	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 	    $(KDIR)/vmlinux.jffs2 \
 	    $(KDIR)/root.ubi | \
 	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
 	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
-    endif
+      endif
 
 	# Attach checksum to combined image (.y2)
 	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2 |awk '{printf "%s",$$$$1}' \
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
+    endif
 
+    ifeq ($(CONFIG_TARGET_IMAGE_FS_Y2),y)
+	# Make header (_fs.y2)
+	$(call Image/Build/Header,header_fs.y2,void,vmlinux.jffs2,void,root.ubi,pkginfo)
+
+	# Concat header, vmlinux and ubi together (_fs.y2)
+	cat $(KDIR)/header_fs.y2 \
+	    $(KDIR)/vmlinux.jffs2 \
+	    $(KDIR)/root.ubi \
+	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
+
+	# If build is signed also sign the kernel,fs part of the image.
+      ifeq ($(CONFIG_SMIMEOPT),y)
+	cat $(KDIR)/vmlinux.jffs2 \
+	    $(KDIR)/root.ubi | \
+	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
+	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
+      endif
+
+	# Attach checksum to combined image (_fs.y2)
+	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2 |awk '{printf "%s",$$$$1}' \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
+    endif
+
+    ifeq ($(CONFIG_TARGET_IMAGE_Y),y)
 	# Make header (.y)
 	$(call Image/Build/Header,header.y,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,root.ubifs,void,pkginfo)
 
@@ -308,18 +349,19 @@ define Image/Build/ubi
 	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
 
 	# If build is signed also sign the cfe,kernel,fs part of the image.
-    ifeq ($(CONFIG_SMIMEOPT),y)
+      ifeq ($(CONFIG_SMIMEOPT),y)
 	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
 	    $(KDIR)/vmlinux.jffs2 \
 	    $(KDIR)/root.ubifs | \
 	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
 	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
-    endif
+      endif
 
 	# Attach checksum to combined image (.y)
 	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y |awk '{printf "%s",$$$$1}' \
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
+    endif
 endef
 
 define Image/Build
