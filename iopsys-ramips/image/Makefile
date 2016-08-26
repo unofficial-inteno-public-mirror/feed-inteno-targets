@@ -959,7 +959,7 @@ endif
 
 define Device/ex300
   DTS := MT7621
-  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  IMAGE_SIZE := $(ralink_default_fw_size_16M)
 endef
 
 
