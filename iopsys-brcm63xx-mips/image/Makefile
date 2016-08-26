@@ -265,7 +265,7 @@ define Image/Build/jffs2-nand-4096-128k
 
     ifeq ($(CONFIG_TARGET_IMAGE_W),y)
 	# Concat the cfe and rootfs together (.w)
-	cat $(BIN_DIR)/$(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
+	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
             $(KDIR)/file128k.tmp | head --bytes=131072 > $(KDIR)/cfe_fs_image_128
 	cat $(KDIR)/root.$(1) >> $(KDIR)/cfe_fs_image_128
 
