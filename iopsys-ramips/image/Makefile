@@ -42,4 +42,22 @@ define Device/ex300
 
 endef
 
+
+# define Image/BuildKernel
+#         echo "cp $(KDIR)/vmlinux.elf $(BIN_DIR)/$(VMLINUX).elf" >>/tmp/A
+#         cp $(KDIR)/vmlinux.elf $(BIN_DIR)/$(VMLINUX).elf
+#         cp $(KDIR)/vmlinux $(BIN_DIR)/$(VMLINUX).bin
+#         $(call CompressLzma,$(KDIR)/vmlinux,$(KDIR)/vmlinux.bin.lzma)
+#         $(call MkImage,lzma,$(KDIR)/vmlinux.bin.lzma,$(KDIR)/uImage.lzma)
+#         cp $(KDIR)/uImage.lzma $(BIN_DIR)/$(UIMAGE).bin
+#         mkdir -p  $(TARGET_DIR)/boot
+#         cp $(KDIR)/uImage.lzma $(TARGET_DIR)/boot/uImage.bin
+#         cp $(KDIR)/$$(KERNEL_IMAGE).dtb $(TARGET_DIR)/boot
+#         cp $(KDIR)/$$(KERNEL_IMAGE).dtb $(BIN_DIR)/
+# endef
+
+
+
+
+
 $(eval $(call BuildImage))
