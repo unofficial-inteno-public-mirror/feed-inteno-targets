@@ -1,5 +1,6 @@
 
-comment "Image naming"
+menu "Brcm63xx (ARM/MIPS) Image options"
+	depends on TARGET_iopsys_brcm63xx_arm || TARGET_iopsys_brcm63xx_mips
 
 config TARGET_VERSION
 	string
@@ -83,3 +84,4 @@ config TARGET_IMAGE_FS
 	bool "Generate a legacy \"_fs_image\" JFFS2 root FS only image (deprecated)"
 	default n
 
+endmenu
