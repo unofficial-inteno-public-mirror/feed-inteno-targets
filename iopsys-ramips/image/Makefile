@@ -7,7 +7,7 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/image.mk
 
-UIMAGE:=$(IMG_PREFIX)-uImage
+UIMAGE:=$(IMG_PREFIX).uImage
 UBIFS_OPTS:="-m 2048 -e 126976 -c 4096"
 
 DEVICE_VARS += DTS
@@ -20,9 +20,7 @@ KERNEL_LOADADDR := $(loadaddr-y)
 KERNEL_DTB = kernel-bin | patch-dtb | lzma 
 define Device/Default
   KERNEL := $(KERNEL_DTB) | uImage lzma | Install_uimage_dtb
-  IMAGES := sysupgrade.bin
   IMAGE_SIZE := 30m
-  IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE)
 endef
 
 define CompressLzma
@@ -35,27 +33,29 @@ define MkImage
                 -n "$(imagename)" \
                 -d $(2) $(3)
 endef
- 
-define Build/patch-dtb 
+
+define Build/patch-dtb
 	$(LINUX_DIR)/scripts/dtc/dtc -O dtb -o $@.dtb ../dts/$(DTS).dts
 	$(STAGING_DIR_HOST)/bin/patch-dtb $@ $@.dtb
 	mkdir -p  $(TARGET_DIR)/boot
 	cp $@.dtb $(TARGET_DIR)/boot/dtb
-        cp $@.dtb $(BIN_DIR)/
-
+        cp $@.dtb $(BIN_DIR)/$(IMG_PREFIX).dtb
 endef
 
 define Build/Install_uimage_dtb
-	echo "ken was here" >/tmp/B
 	$(call CompressLzma,$(KDIR)/vmlinux,$(KDIR)/vmlinux.bin.lzma)
 	$(call MkImage,lzma,$(KDIR)/vmlinux.bin.lzma,$(KDIR)/uImage.lzma)
-	echo "ken was here again" >>/tmp/B
-	cp $(KDIR)/uImage.lzma $(BIN_DIR)/$(UIMAGE).bin
+	cp $(KDIR)/uImage.lzma $(BIN_DIR)/$(UIMAGE)
 	mkdir -p  $(TARGET_DIR)/boot
-        cp $(KDIR)/uImage.lzma $(TARGET_DIR)/boot/uImage.bin
+        cp $(KDIR)/uImage.lzma $(TARGET_DIR)/boot/uImage
 endef
 
 
+# how should we copy the root.ubifs to ./bin/iopsys-ramips ??? this is working sort of but still copies multiple times. 
+define Image/Build
+	@echo "BUG: this is run multiple times, why ?? C [$(1)]"
+	cp $(KDIR)/root.ubifs $(BIN_DIR)/$(IMG_PREFIX).ubifs
+endef
 
 ifeq ($(SUBTARGET),ex300)
   TARGET_DEVICES += ex300
@@ -63,7 +63,6 @@ endif
 
 define Device/ex300
   DTS := EX300
-
 endef
 
 
