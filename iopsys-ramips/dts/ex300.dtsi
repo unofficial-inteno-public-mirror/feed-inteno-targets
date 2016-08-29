@@ -85,7 +85,7 @@
 		};
 
 		spi@b00 {
-			status = "okay";
+			status = "disabled";
 
 			compatible = "ralink,mt7621-spi";
 			reg = <0xb00 0x100>;
@@ -193,6 +193,8 @@
 	};
 
 	sdhci@1E130000 {
+		status = "disabled";
+			
 		compatible = "ralink,mt7620-sdhci";
 		reg = <0x1E130000 4000>;
 
