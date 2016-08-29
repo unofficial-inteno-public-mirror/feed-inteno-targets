@@ -1,6 +1,6 @@
 /dts-v1/;
 
-/include/ "mt7621.dtsi"
+/include/ "ex300.dtsi"
 
 / {
 	compatible = "mediatek,mt7621-eval-board", "mediatek,mt7621-soc";
@@ -26,7 +26,7 @@
 	pinctrl {
 		state_default: pinctrl0 {
 			gpio {
-				ralink,group = "i2c", "uart2", "uart3", "rgmii2", "sdhci";
+				ralink,group = "i2c", "uart2", "uart3", "rgmii2";
 				ralink,function = "gpio";
 			};
 		};

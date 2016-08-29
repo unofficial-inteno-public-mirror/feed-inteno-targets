@@ -10,7 +10,7 @@ ARCH:=mipsel
 BOARD:=iopsys-ramips
 BOARDNAME:=Iopsys Ramips
 SUBTARGETS:=ex300
-FEATURES:=squashfs gpio
+FEATURES:= gpio
 MAINTAINER:=Jonas Höglund <jonas.hoglund@inteno.se>
 
 KERNEL_PATCHVER:=3.18
