@@ -1,7 +1,6 @@
-ifconfig ra1 up
-insmod /lib/modules/rlt_wifi.ko
 ifconfig ra0 up
+ifconfig rai0 up
 brctl addif br-lan ra0
-brctl addif br-lan ra1
+brctl addif br-lan rai0
 
 
