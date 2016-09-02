@@ -4,7 +4,7 @@
 
 / {
 	compatible = "mediatek,mt7621-eval-board", "mediatek,mt7621-soc";
-	model = "Mediatek MT7621 evaluation board";
+	model = "ex300";
 
 	memory@0 {
 		device_type = "memory";

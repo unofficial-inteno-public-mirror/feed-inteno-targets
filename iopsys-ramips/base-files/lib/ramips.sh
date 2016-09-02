@@ -424,6 +424,9 @@ ramips_board_detect() {
 	*"Mediatek MT7621 evaluation board")
 		name="mt7621"
 		;;
+	*"ex300")
+		name="ex300"
+		;;
 	*"Mediatek MT7628AN evaluation board")
 		name="mt7628"
 		;;
