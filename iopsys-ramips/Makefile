@@ -13,7 +13,7 @@ SUBTARGETS:=ex300
 FEATURES:= gpio
 MAINTAINER:=Jonas Höglund <jonas.hoglund@inteno.se>
 
-KERNEL_PATCHVER:=3.18
+KERNEL_PATCHVER:=4.4
 
 include $(INCLUDE_DIR)/target.mk
 DEFAULT_PACKAGES += \
