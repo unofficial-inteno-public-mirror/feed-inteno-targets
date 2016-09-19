@@ -105,7 +105,7 @@ $(eval $(call KernelPackage,sound-mtk))
 define KernelPackage/hwnat-mtk
   SUBMENU:=Other modules
   TITLE:=Mediatek hardware NAT module
-  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex300
+  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex400
   FILES:= \
 	$(LINUX_DIR)/net/nat/hw_nat/hw_nat.ko
   AUTOLOAD:=$(call AutoLoad,60,hw_nat,1)
@@ -117,7 +117,7 @@ $(eval $(call KernelPackage,hwnat-mtk))
 define KernelPackage/mt7603-mtk
   SUBMENU:=Other modules
   TITLE:=Mediatek mt7603 driver
-  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex300
+  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex400
   FILES:= \
 	$(LINUX_DIR)/drivers/net/wireless/rlt_wifi_ap/rlt_wifi.ko
   AUTOLOAD:=$(call AutoLoad,60,rlt_wifi,1)

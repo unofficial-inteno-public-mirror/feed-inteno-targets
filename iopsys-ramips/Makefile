@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 ARCH:=mipsel
 BOARD:=iopsys-ramips
 BOARDNAME:=Iopsys Ramips
-SUBTARGETS:=ex300
+SUBTARGETS:=ex400
 FEATURES:= gpio
 MAINTAINER:=Jonas Höglund <jonas.hoglund@inteno.se>
 

@@ -13,7 +13,7 @@ UBIFS_OPTS:="-m 2048 -e 126976 -c 4096"
 DEVICE_VARS += DTS
 
 loadaddr-y := 0x80000000
-loadaddr-$(CONFIG_TARGET_iopsys_ramips_ex300) := 0x80001000
+loadaddr-$(CONFIG_TARGET_iopsys_ramips_ex400) := 0x80001000
 
 KERNEL_LOADADDR := $(loadaddr-y)
 
@@ -57,12 +57,12 @@ define Image/Build
 	cp $(KDIR)/root.ubifs $(BIN_DIR)/$(IMG_PREFIX).ubifs
 endef
 
-ifeq ($(SUBTARGET),ex300)
-  TARGET_DEVICES += ex300
+ifeq ($(SUBTARGET),ex400)
+  TARGET_DEVICES += ex400
 endif
 
-define Device/ex300
-  DTS := EX300
+define Device/ex400
+  DTS := EX400
 endef
 
 

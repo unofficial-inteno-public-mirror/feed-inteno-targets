@@ -3,16 +3,16 @@
 # target config
 config 	KERNEL_GIT_CLONE_URI
 	string
-	default "git@private.inteno.se:linux.git" if TARGET_iopsys_ramips_ex300
+	default "git@private.inteno.se:linux.git" if TARGET_iopsys_ramips_ex400
 
 config 	KERNEL_GIT_BRANCH
 	string
-	default "mt7621_iopsys" if TARGET_iopsys_ramips_ex300
+	default "mt7621_iopsys" if TARGET_iopsys_ramips_ex400
 
 
 config TARGET_IBOARDID
 	string
-	default "EX300" if TARGET_iopsys_ramips_ex300
+	default "EX400" if TARGET_iopsys_ramips_ex400
 	help
 		4 letter id code used in the trailer or header to ensure the firmware to be flashed
 		is for the correct board. This id is also used in the bcmkernel package to ensure
