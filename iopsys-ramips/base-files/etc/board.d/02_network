@@ -73,6 +73,7 @@ ramips_setup_interfaces()
 	hlk-rm04|\
 	miwifi-mini|\
 	miwifi-nano|\
+	ex400|\
 	mt7621|\
 	mt7628|\
 	mzk-750dhp|\

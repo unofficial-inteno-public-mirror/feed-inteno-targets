@@ -289,6 +289,9 @@ ramips_board_detect() {
 	*"MT7621 evaluation"*)
 		name="mt7621"
 		;;
+	*"ex400"*)
+		name="ex400"
+		;;
 	*"MT7628AN evaluation"*)
 		name="mt7628"
 		;;

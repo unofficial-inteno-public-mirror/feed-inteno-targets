@@ -4,7 +4,7 @@
 
 / {
 	compatible = "mediatek,mt7621-eval-board", "mediatek,mt7621-soc";
-	model = "ex300";
+	model = "ex400";
 
 	memory@0 {
 		device_type = "memory";
