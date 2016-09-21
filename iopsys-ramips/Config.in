@@ -21,6 +21,12 @@ config TARGET_IBOARDID
 		VG50 -> VG50
 		D201 -> DG201
 
+# hack to ensure that Device/Default is run
+config TARGET_ROOTFS_INITRAMFS
+       bool
+       default y if TARGET_iopsys_ramips_ex400
 
+
+       
 
 
