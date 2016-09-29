@@ -10,7 +10,7 @@ CPU_TYPE:=1004kc
 CPU_SUBTYPE:=dsp
 CFLAGS:=-Os -pipe -mmt -mips32r2 -mtune=1004kc
 
-DEFAULT_PACKAGES += uboot-ex400 kmod-mt7603-mtk wireless-tools bridge
+DEFAULT_PACKAGES += uboot-ex400 kmod-mt7603-mtk kmod-hwnat-mtk wireless-tools bridge
 
 define Target/Description
 	Build firmware images for Ralink MT7621 based boards.
