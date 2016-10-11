@@ -26,7 +26,8 @@ config TARGET_ROOTFS_INITRAMFS
        bool
        default y if TARGET_iopsys_ramips_ex400
 
-
-       
-
+# brctl from bridge-utils will be used instead
+config 	BUSYBOX_DEFAULT_BRCTL
+	bool
+	default n if TARGET_iopsys_ramips
 
