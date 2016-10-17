@@ -21,6 +21,18 @@ config TARGET_IBOARDID
 		VG50 -> VG50
 		D201 -> DG201
 
+config MEDIATEK_CHIP_ID
+       string
+       default "7621" if TARGET_iopsys_ramips_ex400
+
+config TARGET_MODEL_NAME
+	string
+	prompt "Model name + configuration" if TARGET_iopsys_ramips_Default
+
+	default "EX400-WU8U" if TARGET_iopsys_ramips_ex400
+	help
+		First part of image name
+
 # hack to ensure that Device/Default is run
 config TARGET_ROOTFS_INITRAMFS
        bool
@@ -30,4 +42,16 @@ config TARGET_ROOTFS_INITRAMFS
 config 	BUSYBOX_DEFAULT_BRCTL
 	bool
 	default n if TARGET_iopsys_ramips
+
+config TARGET_VERSION
+	string
+	prompt "Model version"
+	help
+		Second part of image name
+	
+config TARGET_CUSTOMER
+	string
+	prompt "Customer ID"
+	help
+		A Customer id that is added to software file name
 

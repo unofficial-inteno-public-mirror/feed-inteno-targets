@@ -17,6 +17,11 @@ loadaddr-$(CONFIG_TARGET_iopsys_ramips_ex400) := 0x80001000
 
 KERNEL_LOADADDR := $(loadaddr-y)
 
+IHGSP_VERSION:=$(CONFIG_TARGET_MODEL_NAME)_$(CONFIG_TARGET_CUSTOMER)$(CONFIG_TARGET_VERSION)-$(shell date '+%y%m%d_%H%M')
+IHGSP_BUILD_VERSION:=$(shell echo $(IHGSP_VERSION) | sed s/\"//g)
+
+BUILD_DIR_ROOT:=$(BUILD_DIR)/root-$(shell echo $(CONFIG_TARGET_BOARD) | sed s/\"//g)
+
 KERNEL_DTB = kernel-bin | patch-dtb | lzma 
 define Device/Default
   KERNEL := $(KERNEL_DTB) | uImage lzma | Install_uimage_dtb
@@ -50,11 +55,64 @@ define Build/Install_uimage_dtb
         cp $(KDIR)/uImage.lzma $(TARGET_DIR)/boot/uImage
 endef
 
+HEADER_VERSION:=3
+
+define Image/Build/Header
+	# Args: $1=header $2=cfe $3=kernel $4=ubifs $5=ubi $6=pkginfo
+	# Any unused arguments should be passed as 'void'
+
+	echo "In Image/Build/Header $(1) $(2) $(3) $(4) $(5) $(6)"
+
+	truncate --size=0 $(KDIR)/void
+	echo "IntenoBlob" > $(KDIR)/hdr
+	echo "version $(HEADER_VERSION)" >> $(KDIR)/hdr
+	echo "integrity MD5SUM" >> $(KDIR)/hdr
+	echo "board $(CONFIG_TARGET_IBOARDID)" >> $(KDIR)/hdr
+	echo "chip $(CONFIG_MEDIATEK_CHIP_ID)" >> $(KDIR)/hdr
+	echo "arch all $(CONFIG_TARGET_ARCH_PACKAGES)" >> $(KDIR)/hdr
+	echo "model $(CONFIG_TARGET_MODEL_NAME)" >> $(KDIR)/hdr
+	echo "release $(CONFIG_TARGET_VERSION)" >> $(KDIR)/hdr
+	echo "customer $(CONFIG_TARGET_CUSTOMER)" >> $(KDIR)/hdr
+	echo "ubifs $$$$(ls -l $(KDIR)/$(4) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "ubi $$$$(ls -l $(KDIR)/$(5) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "pkginfo $$$$(ls -l $(KDIR)/$(6) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+    ifeq ($(CONFIG_SMIMEOPT),y)
+	echo "sig 256" >> $(KDIR)/hdr
+    endif
+	cat $(KDIR)/hdr /dev/zero | head --bytes=1024 > $(KDIR)/$(1)
+
+endef
+
 
 # how should we copy the root.ubifs to ./bin/iopsys-ramips ??? this is working sort of but still copies multiple times. 
 define Image/Build
 	@echo "BUG: this is run multiple times, why ?? C [$(1)]"
+	# extract package info
+	cat $(BUILD_DIR_ROOT)/usr/lib/opkg/status \
+	   | awk '/^Package:/ {printf "%s ",$$$$2} /^Version:/ {printf "%s\n",$$$$2}' \
+	   | sort \
+	   | awk '{printf "===Package start===\nPackage: %s\nVersion: %s\n",$$$$1,$$$$2}' \
+	   > $(KDIR)/pkginfo
+	# copy ubifs and craete y2 image
 	cp $(KDIR)/root.ubifs $(BIN_DIR)/$(IMG_PREFIX).ubifs
+	# Make header (_cfe.y2)
+	ls -l $(KDIR)/root.ubifs
+	$(call Image/Build/Header,header.y2,void,void,root.ubifs,void,pkginfo)
+	cat $(KDIR)/header.y2 \
+	    $(KDIR)/root.ubifs \
+	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
+
+	# If build is signed also sign the cfe,kernel,fs part of the image.
+        ifeq ($(CONFIG_SMIMEOPT),y)
+	    cat  $(KDIR)/root.ubifs | \
+		openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
+		-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
+        endif
+
+	# Attach checksum to combined image (.y2)
+	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2 |awk '{printf "%s",$$$$1}' \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
 endef
 
 ifeq ($(SUBTARGET),ex400)
