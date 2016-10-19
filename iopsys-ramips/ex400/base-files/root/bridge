@@ -1,3 +1,0 @@
-ifconfig eth0.2 0.0.0.0
-brctl addif br-lan eth0.2
-/etc/init.d/odhcpd stop
