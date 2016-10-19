@@ -2,6 +2,18 @@
 menu "Brcm63xx (ARM/MIPS) Image options"
 	depends on TARGET_iopsys_brcm63xx_arm || TARGET_iopsys_brcm63xx_mips
 
+config TARGET_VERSION
+	string
+	prompt "Model version"
+	help
+		Second part of image name
+
+config TARGET_CUSTOMER
+	string
+	prompt "Customer ID"
+	help
+		A Customer id that is added to software file name
+
 config TARGET_CFERAM_EXT
 	string
 	prompt "cferam.xxx file extension"
@@ -58,7 +70,7 @@ config TARGET_IMAGE_FS_Y2
 
 config TARGET_IMAGE_Y
 	bool "Generate a legacy \".y\" UBIFS CFE + root FS image (deprecated)"
-	default n
+	default y
 
 config TARGET_IMAGE_W
 	bool "Generate a legacy \".w\" combined CFE + root FS image (deprecated)"
