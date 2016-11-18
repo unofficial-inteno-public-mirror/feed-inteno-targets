@@ -43,7 +43,7 @@ I2C_MT7621_MODULES:= \
 define KernelPackage/i2c-mt7621
   $(call i2c_defaults,$(I2C_MT7621_MODULES),59)
   TITLE:=MT7621 I2C Controller
-  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex400 +kmod-i2c-core
+  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex400 kmod-i2c-core
 endef
 
 define KernelPackage/i2c-mt7621/description
