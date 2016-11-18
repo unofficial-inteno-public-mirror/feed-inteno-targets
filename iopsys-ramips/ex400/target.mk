@@ -12,7 +12,11 @@ CFLAGS:=-Os -pipe -mmt -mips32r2 -mtune=1004kc
 
 USB_PACKAGES = kmod-usb-storage kmod-scsi-core kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 block-mount
 
-DEFAULT_PACKAGES += uboot-ex400 kmod-mt7603-mtk kmod-hwnat-mtk kmod-i2c-mt7621 kmod-i2c-core wireless-tools bridge ated $(USB_PACKAGES)
+USERSPACE_PACKAGES = wireless-tools bridge ated
+
+KERNEL_PACKAGES = kmod-mt7603-mtk kmod-hwnat-mtk kmod-i2c-mt7621 kmod-i2c-core
+
+DEFAULT_PACKAGES += uboot-ex400 $(KERNEL_PACKAGES) $(USB_PACKAGES) $(USERSPACE_PACKAGES)
 
 
 define Target/Description
