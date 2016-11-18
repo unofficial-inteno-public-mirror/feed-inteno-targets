@@ -1,0 +1,20 @@
+############### mapping function button to driver button
+config button RESET
+        list button gpio_reset
+        option minpress 5000
+        option hotplug resetbutton
+
+config button WPS
+        list button 9512_wps
+        option hotplug wpsbutton
+        option minpress 1000
+
+config button wifi_2g
+        list button 9512_wifi_2g
+        option hotplug wifi_2g
+        option minpress 1000
+
+config button wifi_5g
+        list button 9512_wifi_5g
+        option hotplug wifi_5g
+        option minpress 1000

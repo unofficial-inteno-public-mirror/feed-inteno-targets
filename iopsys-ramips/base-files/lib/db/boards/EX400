@@ -13,11 +13,9 @@ config board 'board'
 	option ethernetPortOrder 'eth0.1 eth0.2'
 	option ethernetLanPorts 'eth0.1'
 	option ethernetWanPort 'eth0.2'
-#	option wpsButtonGpio '0'
-#	option i2cGpioCustom 'bus0=0,23,22 bus1=1,9,8'
 	option sx9512_i2c_device '/dev/i2c-0'
 	option sx9512_i2c_address 2b
-	option sx9512_irq_pin 1
+	option sx9512_irq_pin 10
 	option sx9512_active_capsense_channels 0f
 	option sx9512_active_led_channels ff
 
@@ -28,21 +26,30 @@ config board 'board'
 #
 
 ############### gpio buttons, driver config
-# config gpio_button gpio_buttons
-#        list buttons gpio_reset
+config gpio_button gpio_buttons
+        list buttons gpio_reset
 
-# config gpio_button gpio_reset
-#        option addr 32
-#        option active low
+config gpio_button gpio_reset
+        option addr 18
+	option mode linux
+        option active low
 
 ############### sx9512, i2c buttons, driver config
 config 9512_button 9512_buttons
        list buttons 9512_wps
+       list buttons 9512_wifi_2g
+       list buttons 9512_wifi_5g
        list buttons 9512_touch_near
        list buttons 9512_touch_far
 
+config 9512_button 9512_wifi_2g
+       option addr   1
+
+config 9512_button 9512_wifi_5g
+       option addr   2
+
 config 9512_button 9512_wps
-       option addr   4
+       option addr   3
 
 config 9512_button 9512_touch_near
        option addr   8
@@ -50,39 +57,6 @@ config 9512_button 9512_touch_near
 config 9512_button 9512_touch_far
        option addr   9
 
-############### function buttons used on board.
-config button_map button_map	
-#	list buttonnames RESET
-	list buttonnames WPS
-#	list buttonnames Wireless
-	list buttonnames THOUCH_NEAR
-	list buttonnames THOUCH_FAR
-	option minpress 1000
-
-############### mapping function button to driver button
-config button_map RESET
-       list button gpio_reset
-       option minpress 5000
-       option hotplug resetbutton
-
-config button_map WPS
-       list button 9512_wps
-       option hotplug wpsbutton
-
-config button_map Wireless
-       list button 9512_wireless
-       option hotplug ecobutton
-
-config button_map THOUCH_NEAR
-       list button 9512_touch_near
-       option hotplug touch_near
-       option dimming	on
-       option minpress 0
-
-config button_map THOUCH_FAR
-       list button 9512_touch_far
-       option hotplug touch_far
-       option minpress 0
 	
 #
 #		Button config , end
@@ -137,11 +111,13 @@ config 9512_led WPS_green
 
 ############### mapping led function to driver led
 config led_map led_map
-       list press_indicator led_wifi
+       list press_indicator led_wifi_2g
+       list press_indicator led_wifi_5g	
        list press_indicator led_wps
        list press_indicator led_internet
 
-	list functions wifi
+	list functions 'wifi_2g'
+	list functions 'wifi_5g'	
 	list functions wps
 	list functions status
 	list functions internet
@@ -154,24 +130,19 @@ config led_map led_map
        list dimming 		status
        list dimming		internet
 
-config led_map led_wifi
-       list led_action_ok     'Wireless_green = ON'
-       list led_action_ok     'Wireless_blue  = OFF'
+config led_map 'led_wifi_2g'
+       list led_action_ok     'Wireless_24 = ON'
+       list led_action_off    'Wireless_24 = OFF'
+       list led_action_notice 'Wireless_24 = FLASH_SLOW'
+       list led_action_alert  'Wireless_24 = FLASH_SLOW'
+       list led_action_error  'Wireless_24 = FLASH_FAST'
 
-       list led_action_eok    'Wireless_green = OFF'
-       list led_action_eok    'Wireless_blue  = ON'
-
-       list led_action_off    'Wireless_green = OFF'
-       list led_action_off    'Wireless_blue  = OFF'
-
-       list led_action_notice 'Wireless_green = FLASH_SLOW'
-       list led_action_notice 'Wireless_blue  = OFF'
-
-       list led_action_alert  'Wireless_green = OFF'
-       list led_action_alert  'Wireless_blue  = FLASH_SLOW'
-
-       list led_action_error  'Wireless_green = OFF'
-       list led_action_error  'Wireless_blue  = FLASH_FAST'
+config led_map 'led_wifi_5g'
+       list led_action_ok     'Wireless_5 = ON'
+       list led_action_off    'Wireless_5 = OFF'
+       list led_action_notice 'Wireless_5 = FLASH_SLOW'
+       list led_action_alert  'Wireless_5 = FLASH_SLOW'
+       list led_action_error  'Wireless_5 = FLASH_FAST'
 
 config led_map led_wps
        list led_action_ok	'WPS_green=ON'
