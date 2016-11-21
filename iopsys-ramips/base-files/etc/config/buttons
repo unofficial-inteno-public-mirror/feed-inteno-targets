@@ -8,6 +8,8 @@ config button WPS
         list button 9512_wps
         option hotplug wpsbutton
         option minpress 1000
+	option hotplug_long wpscbutton
+	option longpress 4000
 
 config button wifi_2g
         list button 9512_wifi_2g

@@ -19,6 +19,8 @@ config button Wireless
 	list button 9512_wireless
 	option hotplug ecobutton
 	option minpress 1000
+	option hotplug_long wpscbutton
+	option longpress 10000
 
 #config button THOUCH_NEAR
 #	list button 9512_touch_near

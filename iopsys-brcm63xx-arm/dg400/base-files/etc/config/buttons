@@ -18,6 +18,8 @@ config button WPS
 	list button 9512_wps
 	option hotplug wpsbutton
 	option minpress 1000
+	option hotplug_long wpscbutton
+	option longpress 10000
 
 config button DECT
 	list button 9512_dect

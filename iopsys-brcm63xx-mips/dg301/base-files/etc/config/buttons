@@ -16,6 +16,8 @@ config button WPS
 	list button gpio_wps
 	option hotplug wpsbutton
 	option minpress 100
+	option hotplug_long wpscbutton
+	option longpress 10000
 
 config button INFO
 	list button gpio_info
