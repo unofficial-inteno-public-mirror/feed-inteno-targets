@@ -1,0 +1,39 @@
+config leds 'leds'
+	option enable '1'
+
+config led 'logo'
+	option enable '1'
+
+config led 'status'
+	option enable '1'
+
+config led 'broadband'
+	option enable '1'
+
+config led 'internet'
+	option enable '1'
+
+config led 'voice1'
+	option enable '1'
+	option label voice
+
+config led 'wifi'
+	option enable '1'
+
+config led 'wps'
+	option enable '1'
+
+config led 'dect'
+	option enable '1'
+
+config led 'ext'
+	option enable '1'
+
+config led 'dsl'
+	option enable '1'
+	list _access_r none
+
+config led 'wan'
+	option enable '1'
+	list _access_r none
+
