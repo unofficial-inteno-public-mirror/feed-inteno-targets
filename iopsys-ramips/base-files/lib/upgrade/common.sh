@@ -306,7 +306,11 @@ get_image_chip_id() {
 }
 
 get_chip_id() {
-	fw_printenv -n chipid
+    #	fw_printenv -n chipid
+    case "$(cat /proc/cpuinfo  |grep "system type" | awk '{print $5}')" in
+	MT7621)echo "7621";;
+	*);;
+    esac
 }
 
 get_endian() {
