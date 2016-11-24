@@ -5,7 +5,16 @@ START=99
 
 start() {
 	local board=$(ramips_board_name)
-	if [ $board = "sk-wb8" ]; then
-		fw_setenv bootcount 0
+	if [ $board = "ex400" ]; then
+
+	    ub_vol=$(fw_printenv -n root_vol)
+	    cur_vol=$(for opt in $(cat /proc/cmdline) ;do case $opt in root=*) echo $opt ;;esac ;done | cut -f 2 -d:)
+
+	    if [ "$ub_vol" == "$cur_vol" ]
+	    then
+		fw_setenv  boot_cnt_primary 0
+	    else
+		fw_setenv  boot_cnt_alt 0
+	    fi
 	fi
 }

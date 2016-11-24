@@ -582,8 +582,8 @@ inteno_image_upgrade() {
 
 	    # only ubifs -> mediatek image
 
-	    # if ub_root and cur_root differ something is strange and we should do something ??
-	    # for now we ignore the ub_variable.
+	    # if ub_vol is not same as cur_vol we have an alternative boot.
+	    # that is something is wrong with primary system. 
 	    ub_vol=$(fw_printenv -n root_vol)
 	    cur_vol=$(for opt in $(cat /proc/cmdline) ;do case $opt in root=*) echo $opt ;;esac ;done | cut -f 2 -d:)
 
@@ -599,6 +599,9 @@ inteno_image_upgrade() {
 	    then
 		v "wrote filesystem. setting to $upd_vol_name be active system"
 		fw_setenv root_vol $upd_vol_name
+		# set boot count to 0 as we now have a new system.
+		fw_setenv boot_cnt_primary 0
+		fw_setenv boot_cnt_alt 0
 	    else
 		v "could not write filesystem to volume"
 	    fi
