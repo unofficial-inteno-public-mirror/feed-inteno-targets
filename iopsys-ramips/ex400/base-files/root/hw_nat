@@ -1,1 +1,2 @@
 insmod /lib/modules/4.4.14/hw_nat.ko
+iwpriv rai0 set hw_nat_register=1
