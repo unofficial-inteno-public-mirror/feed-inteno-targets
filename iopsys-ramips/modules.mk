@@ -108,7 +108,8 @@ define KernelPackage/hwnat-mtk
   DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex400
   FILES:= \
 	$(LINUX_DIR)/net/nat/hw_nat/hw_nat.ko
-endef	
+  AUTOLOAD:=$(call AutoLoad,55,hw_nat,1)
+endef
 
 $(eval $(call KernelPackage,hwnat-mtk))
 

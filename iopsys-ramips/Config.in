@@ -1,5 +1,4 @@
 
-
 # target config
 config 	KERNEL_GIT_CLONE_URI
 	string
@@ -11,7 +10,7 @@ config 	KERNEL_GIT_BRANCH
 
 config	KERNEL_GIT_COMMIT
 	string
-	default "05cd6f2dfe8890a9ce73ebfdf61f9622eba739cf" if TARGET_iopsys_ramips_ex400
+	default "128b093d60cc18b0f536c2974153f3eb9e791d58" if TARGET_iopsys_ramips_ex400
 
 config TARGET_IBOARDID
 	string
