@@ -12,7 +12,7 @@ CFLAGS:=-Os -pipe -mmt -mips32r2 -mtune=1004kc
 
 USB_PACKAGES = kmod-usb-storage kmod-scsi-core kmod-fs-vfat kmod-nls-cp437 kmod-nls-iso8859-1 block-mount
 
-USERSPACE_PACKAGES = wireless-tools bridge ated
+USERSPACE_PACKAGES = wireless-tools bridge ated inbd
 
 KERNEL_PACKAGES = kmod-mt7603-mtk kmod-hwnat-mtk kmod-i2c-mt7621 kmod-i2c-core
 
