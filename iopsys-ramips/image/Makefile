@@ -84,6 +84,15 @@ define Image/Build/Header
 endef
 
 
+define Image/Prepare
+
+	sed -i 's/^IOP Version.*/IOP Version: $(IHGSP_BUILD_VERSION)/gi' $(BUILD_DIR_ROOT)/etc/banner
+	mkdir -p $(BUILD_DIR_ROOT)/lib/db/version
+	echo $(IHGSP_BUILD_VERSION)  > $(BUILD_DIR_ROOT)/lib/db/version/iop_version
+	echo $(CONFIG_TARGET_CUSTOMER)> $(BUILD_DIR_ROOT)/lib/db/version/iop_customer
+
+endef
+
 # how should we copy the root.ubifs to ./bin/iopsys-ramips ??? this is working sort of but still copies multiple times. 
 define Image/Build
 	@echo "BUG: this is run multiple times, why ?? C [$(1)]"
