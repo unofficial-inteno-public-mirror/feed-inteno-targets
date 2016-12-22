@@ -128,7 +128,7 @@ iopsys_initialize_db_mtk() {
 
 		HARDWARE="`uci get /lib/db/config/hw.board.hardware`"
 		SERIALNR="`fw_printenv -n serialnumber`"
-		BASEMAC="`fw_printenv -n BaseMacAddr | tr ' ' ':' | sed 's/:$//' | tr [a-z] [A-Z]`"
+		BASEMAC="`fw_printenv -n ethaddr | tr ' ' ':' | sed 's/:$//' | tr [a-z] [A-Z]`"
 
 #		AUTHKEY="`fw_printenv -n AuthKey`"
 #		WPAKEY="`fw_printenv -n WpaKey`"
