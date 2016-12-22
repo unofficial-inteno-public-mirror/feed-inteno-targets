@@ -127,12 +127,12 @@ iopsys_initialize_db_mtk() {
 		cp /lib/db/boards/$BOARDID /lib/db/config/hw
 
 		HARDWARE="`uci get /lib/db/config/hw.board.hardware`"
-		SERIALNR="`fw_printenv -n serialnumber`"
+		SERIALNR="`fw_printenv -n serial_number`"
 		BASEMAC="`fw_printenv -n ethaddr | tr ' ' ':' | sed 's/:$//' | tr [a-z] [A-Z]`"
 
-#		AUTHKEY="`fw_printenv -n AuthKey`"
-#		WPAKEY="`fw_printenv -n WpaKey`"
-#		DESKEY="`fw_printenv -n DesKey`"		
+		AUTHKEY="`fw_printenv -n auth_key`"
+		WPAKEY="`fw_printenv -n wpa_key`"
+		DESKEY="`fw_printenv -n des_key`"		
 
 		HWMODEL="`cat /lib/db/version/iop_version | cut -d'_' -f1 | cut -d'-' -f2`"
 		ROUTERMODEL="$HARDWARE$DSLANNEX-$HWMODEL$DECT$PCI"
