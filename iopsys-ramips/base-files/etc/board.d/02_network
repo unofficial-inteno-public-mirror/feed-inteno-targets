@@ -99,7 +99,14 @@ ramips_setup_interfaces()
 		;;
 	ex400)
 		ucidef_add_switch "switch0" \
-		    "1:lan" "0:wan" "6t@eth0" "5t@eth0"
+						  "1:lan" "0:wan" "6t@eth0" "5t@eth0"
+		# wan
+		ucidef_add_switch_port_attr "switch0" 0 matrix 33
+		ucidef_add_switch_port_attr "switch0" 5 matrix 33
+
+		# lan
+		ucidef_add_switch_port_attr "switch0" 1 matrix 78
+		ucidef_add_switch_port_attr "switch0" 6 matrix 78
 		;;
 	ar670w|\
 	ar725w|\
