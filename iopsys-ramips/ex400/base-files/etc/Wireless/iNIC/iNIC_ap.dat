@@ -417,5 +417,5 @@ VOW_WATF_MAC_LV3=
 RED_Enable=
 CP_SUPPORT=
 BgndScanSkipCh=
-EDCCAEnable=
+EDCCAEnable=1
 BandSteering=0
