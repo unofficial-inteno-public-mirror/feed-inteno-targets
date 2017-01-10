@@ -419,3 +419,4 @@ CP_SUPPORT=
 BgndScanSkipCh=
 EDCCAEnable=1
 BandSteering=0
+IgmpSnEnable=
