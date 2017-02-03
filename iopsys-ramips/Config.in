@@ -10,7 +10,7 @@ config 	KERNEL_GIT_BRANCH
 
 config	KERNEL_GIT_COMMIT
 	string
-	default "bd6f7146410aab6a8f6258a45b7175575fffff6a" if TARGET_iopsys_ramips_ex400
+	default "4fa166108154b17d4b47bfb05d01891f7b2b5fd6" if TARGET_iopsys_ramips_ex400
 
 config TARGET_IBOARDID
 	string
