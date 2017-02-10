@@ -250,12 +250,12 @@ include /lib/upgrade
 [ "$1" = "nand" ] && nand_upgrade_stage2 $@
 
 handle_etc() {
-	local BMAC=$(cat /proc/nvram/BaseMacAddr | tr '[a-z]' '[A-Z]')
-	BMAC=${BMAC// /}
+	local BMAC=$(db -q get hw.board.BaseMacAddr | tr '[a-z]' '[A-Z]')
+	BMAC=${BMAC//:/}
 	local MAC=$(printf "%X\n" $((0x$BMAC)))
 	local BSSID=$(printf "%X\n" $((0x$BMAC + 2)))
-	local WPAKEY=$(cat /proc/nvram/WpaKey)
-        local SERIALNR=$(cat /proc/nvram/SerialNumber)
+	local WPAKEY=$(db -q get hw.board.wpaKey)
+        local SERIALNR=$(db -q get hw.board.serialNumber)
         local HWVER=$(db get hw.board.hardwareVersion)
         local RMODEL=$(db get hw.board.routerModel)
         local DESKEY=$(db get hw.board.desKey)
