@@ -12,7 +12,7 @@ iopsys_initialize_db() {
 	echo "Initializing iopsys db"
 
 	OLDCFERAM="`uci -q get /lib/db/config/hw.board.cferam`"
-	if cat /proc/cmdline |grep -q ubi:rootfs_0; then
+	if cat /proc/cmdline |grep -q rootfstype=ubifs; then
 		NEWCFERAM="`brcm_fw_tool -s -1 update /dev/mtd0`"
 		FILESYSTEM="UBIFS"
 		BANK="low"
