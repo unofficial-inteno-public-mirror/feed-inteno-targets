@@ -17,7 +17,7 @@ loadaddr-$(CONFIG_TARGET_iopsys_ramips_ex400) := 0x80001000
 
 KERNEL_LOADADDR := $(loadaddr-y)
 
-IHGSP_VERSION:=$(CONFIG_TARGET_MODEL_NAME)_$(CONFIG_TARGET_CUSTOMER)$(CONFIG_TARGET_VERSION)-$(shell git rev-parse --short HEAD)-$(shell date '+%y%m%d_%H%M')
+IHGSP_VERSION:=$(CONFIG_TARGET_MODEL_NAME)_$(CONFIG_TARGET_CUSTOMER)$(CONFIG_TARGET_VERSION)-$(shell date '+%y%m%d_%H%M')
 IHGSP_BUILD_VERSION:=$(shell echo $(IHGSP_VERSION) | sed s/\"//g)
 
 BUILD_DIR_ROOT:=$(BUILD_DIR)/root-$(shell echo $(CONFIG_TARGET_BOARD) | sed s/\"//g)
