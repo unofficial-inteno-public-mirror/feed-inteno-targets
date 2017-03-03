@@ -95,13 +95,10 @@ define Image/Prepare
 	mkdir -p $(KDIR)/kernel_fs
 	cp $(KDIR)/vmlinux.lz $(wildcard $(KDIR)/*.dtb) $(KDIR)/kernel_fs/
 	touch $(KDIR)/kernel_fs/$(CFERAM_FILENAME)
-	echo "/$(CFERAM_FILENAME)" > $(KDIR)/nocomprlist
-	echo "/vmlinux.lz" >> $(KDIR)/nocomprlist
 	$(STAGING_DIR_HOST)/bin/mkfs.jffs2 \
-		$(MKFS_JFFS2_ARGS) \
+		$(MKFS_JFFS2_ARGS) -m none \
 		-v -e 128KiB -s 4096 --squash --no-cleanmarkers \
-		--pad -N $(KDIR)/nocomprlist \
-		-d $(KDIR)/kernel_fs -o $(KDIR)/vmlinux.jffs2
+		--pad -d $(KDIR)/kernel_fs -o $(KDIR)/vmlinux.jffs2
     endif
 
 	# generate jffs2 eof file marker of 128k size (.w)
