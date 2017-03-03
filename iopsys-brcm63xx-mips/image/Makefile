@@ -93,7 +93,7 @@ define Image/Prepare
 	# make kernel jffs2 image (.y.y2)
 	rm -rf $(KDIR)/kernel_fs
 	mkdir -p $(KDIR)/kernel_fs
-	cp $(KDIR)/vmlinux.lz $(KDIR)/kernel_fs/
+	cp $(KDIR)/vmlinux.lz $(wildcard $(KDIR)/*.dtb) $(KDIR)/kernel_fs/
 	touch $(KDIR)/kernel_fs/$(CFERAM_FILENAME)
 	echo "/$(CFERAM_FILENAME)" > $(KDIR)/nocomprlist
 	echo "/vmlinux.lz" >> $(KDIR)/nocomprlist
