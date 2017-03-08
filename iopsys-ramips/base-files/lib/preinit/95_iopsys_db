@@ -60,7 +60,7 @@ iopsys_initialize_db() {
 		PCI=$(pci_modelchange)
 		ROUTERMODEL="$HARDWARE$DSLANNEX-$HWMODEL$DECT$PCI"
 		BRCMVERSION="`cat /etc/banner | grep BrcmRef | awk '{print$3}'`"
-		SOCMODEL="`brcm_fw_tool info -k`"
+		SOCMODEL="`grep "system type" /proc/cpuinfo  | awk '{print$5}'`"
 		SOCREVISION="`brcm_fw_tool info -e`"
 		CFEVERSION="`fw_printenv -n uboot_version | awk '{print$2}'`"
 		KERNELVERSION="`cat /proc/sys/kernel/osrelease`"
