@@ -12,18 +12,18 @@ iopsys_initialize_db() {
 	echo "Initializing iopsys db"
 
 	OLDCFERAM="`uci -q get /lib/db/config/hw.board.cferam`"
-	if cat /proc/cmdline |grep -q rootfstype=ubifs; then
+	if grep -q rootfstype=ubifs /proc/cmdline; then
 		NEWCFERAM="`brcm_fw_tool -s -1 update /dev/mtd0`"
 		FILESYSTEM="UBIFS"
 		BANK="low"
-	elif cat /proc/cmdline |grep -q ubi:rootfs_1; then
+	elif grep -q ubi:rootfs_1 /proc/cmdline; then
 		NEWCFERAM="`brcm_fw_tool -s -1 update /dev/mtd1`"
 		FILESYSTEM="UBIFS"
 		BANK="high"
 	else
 		NEWCFERAM="`ls /cferam* | awk -F'.' '{print$NF}'`"
 		FILESYSTEM="JFFS2"
-		cat /proc/cmdline |grep -q bank=low && BANK="low" || BANK="high"
+		grep -q "bank=low" /proc/cmdline && BANK="low" || BANK="high"
 	fi
 
 	if [ -f "/lib/db/config/hw" ] && [ "$NEWCFERAM" == "$OLDCFERAM" ]; then
@@ -62,7 +62,7 @@ iopsys_initialize_db() {
 		BRCMVERSION="`cat /etc/banner | grep BrcmRef | awk '{print$3}'`"
 		SOCMODEL="`brcm_fw_tool info -k`"
 		SOCREVISION="`brcm_fw_tool info -e`"
-		CFEVERSION="`brcm_fw_tool info -l`"
+		CFEVERSION="`fw_printenv -n uboot_version | awk '{print$2}'`"
 		KERNELVERSION="`cat /proc/sys/kernel/osrelease`"
 		IOPVERSION="`cat /lib/db/version/iop_version`"
 
