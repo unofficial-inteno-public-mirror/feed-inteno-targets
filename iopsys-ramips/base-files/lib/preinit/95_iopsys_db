@@ -122,10 +122,19 @@ iopsys_initialize_db_mtk() {
 	else
 		echo "Setting up static db"
 
+		if grep -q "ubi0:rootfs_0" /proc/cmdline; then
+			BANK="low"
+		elif grep -q "ubi0:rootfs_1" /proc/cmdline; then
+			BANK="low"
+		fi
+		FILESYSTEM="UBIFS"
+
+
 		BOARDID=`cat /proc/cpuinfo  | grep machine | awk '{print $3}'| tr [a-z] [A-Z]`
 		[ -d "/lib/db/config" ] || mkdir /lib/db/config
 		cp /lib/db/boards/$BOARDID /lib/db/config/hw
 
+		CFEVERSION="`fw_printenv -n uboot_version | awk '{print$2}'`"
 		HARDWARE="`uci get /lib/db/config/hw.board.hardware`"
 		SERIALNR="`fw_printenv -n serial_number`"
 		BASEMAC="`fw_printenv -n ethaddr | tr ' ' ':' | sed 's/:$//' | tr [a-z] [A-Z]`"
@@ -170,12 +179,15 @@ iopsys_initialize_db_mtk() {
 		uci set /lib/db/config/hw.board.serialNumber="$SERIALNR"
 		uci set /lib/db/config/hw.board.authKey="$AUTHKEY"
 		uci set /lib/db/config/hw.board.wpaKey="$WPAKEY"
+		uci set /lib/db/config/hw.board.filesystem="$FILESYSTEM"
+		uci set /lib/db/config/hw.board.bank="$BANK"
 		uci set /lib/db/config/hw.board.desKey="$DESKEY"
 		uci set /lib/db/config/hw.board.BaseMacAddr="$BASEMAC"
 		uci set /lib/db/config/hw.board.routerModel="$ROUTERMODEL"
 		uci set /lib/db/config/hw.board.socModel="$SOCMODEL"
 		uci set /lib/db/config/hw.board.socRevision="$SOCREVISION"
 		uci set /lib/db/config/hw.board.kernelVersion="$KERNELVERSION"
+		uci set /lib/db/config/hw.board.cfeVersion="$CFEVERSION"
 		uci set /lib/db/config/hw.board.iopVersion="$IOPVERSION"
 		uci commit
 	fi
