@@ -85,12 +85,22 @@ endef
 
 
 define Image/Prepare
-
 	sed -i 's/^IOP Version.*/IOP Version: $(IHGSP_BUILD_VERSION)/gi' $(BUILD_DIR_ROOT)/etc/banner
 	mkdir -p $(BUILD_DIR_ROOT)/lib/db/version
+
+# BUG anyhting using this ??
 	echo $(IHGSP_BUILD_VERSION)  > $(BUILD_DIR_ROOT)/lib/db/version/iop_version
 	echo $(CONFIG_TARGET_CUSTOMER)> $(BUILD_DIR_ROOT)/lib/db/version/iop_customer
 
+# standard os version info https://www.freedesktop.org/software/systemd/man/os-release.html
+	echo "NAME=\"Inteno Open Platform System (IOPSYS)\""	>$(BUILD_DIR_ROOT)/etc/os-release
+	echo "VERSION=\"$(IHGSP_BUILD_VERSION)\""		>>$(BUILD_DIR_ROOT)/etc/os-release
+	echo "ID=\"iopsys\""					>>$(BUILD_DIR_ROOT)/etc/os-release
+	echo "ID_LIKE=\"openwrt\""				>>$(BUILD_DIR_ROOT)/etc/os-release
+	echo "VARIANT=\"$(CONFIG_TARGET_CUSTOMER)\""		>>$(BUILD_DIR_ROOT)/etc/os-release
+	echo "ANSI_COLOR=\"0;34\""				>>$(BUILD_DIR_ROOT)/etc/os-release
+# inteno private
+	echo "IOPSYS_BOARD=\"$(SUBTARGET)\""			>>$(BUILD_DIR_ROOT)/etc/os-release
 endef
 
 # how should we copy the root.ubifs to ./bin/iopsys-ramips ??? this is working sort of but still copies multiple times. 
