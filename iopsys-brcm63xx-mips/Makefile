@@ -26,7 +26,7 @@ define Target/Config
 	source "$(CURDIR)/Config.in"
 endef
 
-DEFAULT_PACKAGES += bcmkernel bcmhotproxy brcm_fw_tool brcminfo mcpd
+DEFAULT_PACKAGES += bcmkernel bcmhotproxy mcpd
 
 # Needed for override to work
 KERNEL_BUILD_DIR ?= $(BUILD_DIR)/linux-$(BOARD)$(if $(SUBTARGET),_$(SUBTARGET))
