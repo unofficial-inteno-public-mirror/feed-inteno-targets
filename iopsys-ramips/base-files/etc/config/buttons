@@ -15,8 +15,11 @@ config button wifi_2g
         list button 9512_wifi_2g
         option hotplug wifi_2g
         option minpress 1000
+	option enable 0
 
 config button wifi_5g
         list button 9512_wifi_5g
         option hotplug wifi_5g
         option minpress 1000
+	option enable 0
+
