@@ -487,7 +487,7 @@ fi
 if [ $TEST -eq 1 ]; then
 	exit 0
 fi
-echo "KEN: sysupgrade_pre_upgrade [$sysupgrade_pre_upgrade]"
+
 run_hooks "" $sysupgrade_pre_upgrade
 
 # Some platforms/devices may want different sysupgrade process, e.g. without
@@ -495,10 +495,9 @@ run_hooks "" $sysupgrade_pre_upgrade
 # This is needed e.g. on NAND devices where we just want to trigger stage1 at
 # this point.
 if type 'platform_pre_upgrade' >/dev/null 2>/dev/null; then
-    echo "KEN A"
     platform_pre_upgrade "$ARGV"
 fi
-echo "KEN B"
+
 ubus call system upgrade > /dev/null
 touch /tmp/sysupgrade
 
@@ -511,10 +510,8 @@ if [ ! -f /tmp/failsafe ] ; then
 fi
 
 if [[ $(cat /tmp/IS_NAND) -eq 0 && -n "$(rootfs_type)" ]]; then
-        echo "KEN C"
 	v "Switching to ramdisk..."
 	run_ramfs '. /lib/functions.sh; include /lib/upgrade; do_upgrade'
 else
-        echo "KEN D"
 	do_upgrade
 fi
