@@ -101,6 +101,10 @@ define Image/Prepare
 	echo "ANSI_COLOR=\"0;34\""				>>$(BUILD_DIR_ROOT)/etc/os-release
 # inteno private
 	echo "IOPSYS_BOARD=\"$(SUBTARGET)\""			>>$(BUILD_DIR_ROOT)/etc/os-release
+
+# add "first boot" marker (.w.y.y2)
+# Ken: why TARGET_DIR and not BUILD_DIR_ROOT ?? 
+	touch $(TARGET_DIR)/IOP3
 endef
 
 # how should we copy the root.ubifs to ./bin/iopsys-ramips ??? this is working sort of but still copies multiple times. 
