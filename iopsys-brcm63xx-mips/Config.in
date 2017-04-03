@@ -7,7 +7,7 @@ config 	KERNEL_GIT_CLONE_URI
 
 config 	KERNEL_GIT_BRANCH
 	string
-	default "bcm_4.16L.04" if TARGET_iopsys_brcm63xx_mips
+	default "bcm_5.02L.02" if TARGET_iopsys_brcm63xx_mips
 
 # brcm has it's own brctl
 config 	BUSYBOX_DEFAULT_BRCTL
