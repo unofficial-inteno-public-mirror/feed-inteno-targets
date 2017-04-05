@@ -9,7 +9,7 @@ include $(TOPDIR)/rules.mk
 ARCH:=mips
 BOARD:=iopsys-brcm63xx-mips
 BOARDNAME:=Iopsys Broadcom MIPS
-FEATURES:=usb jffs2_nand nand ubifs
+FEATURES:=usb nand ubifs
 MAINTAINER:=Benjamin Larsson <benjamin.larsson@inteno.se>
 CFLAGS:=-Os -pipe -mips32 -mtune=mips32 -fno-caller-saves
 
