@@ -19,7 +19,7 @@ HEADER_VERSION:=3
 CFERAM_FILENAME:=cferam.$(CONFIG_TARGET_CFERAM_EXT)
 CFE_BUILT:=
 
-UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x lzma --squash-uids --nosquash-rino-perm --devtable=$(CURDIR)/device_table.txt
+UBIFS_OPTS = -v -c 2048 -m 2048 -e 126976 -x xz --squash-uids --devtable=$(CURDIR)/device_table.txt
 UBI_OPTS = -v -m 2048 -p 128KiB
 
 
@@ -90,7 +90,7 @@ define Image/Prepare
 	$(STAGING_DIR_HOST)/bin/imagetag_nand $(IMAGETAG_KERNEL_ARGS)
 
     ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
-	# make kernel jffs2 image (.y.y2)
+	# make kernel jffs2 image (.y.y2)	
 	rm -rf $(KDIR)/kernel_fs
 	mkdir -p $(KDIR)/kernel_fs
 	cp $(KDIR)/vmlinux.lz $(wildcard $(KDIR)/*.dtb) $(KDIR)/kernel_fs/
@@ -189,6 +189,9 @@ define Image/Prepare
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/bluetooth.ko
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/btusb.ko
     endif
+
+	rm $(TARGET_DIR)/$(CFERAM_FILENAME)
+	rm $(TARGET_DIR)/vmlinux.lz
 endef
 
 define Image/Build/Header
