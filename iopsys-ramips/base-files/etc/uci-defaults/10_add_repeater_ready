@@ -1,0 +1,5 @@
+#!/bin/sh
+
+[ -f /etc/config/netmode ] || exit
+uci -q set netmode.setup.repeaterready=1
+uci commit netmode
