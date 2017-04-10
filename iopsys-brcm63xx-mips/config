@@ -23,6 +23,6 @@
 # CONFIG_juci_router_openwrt is not set
 
 # CONFIG_PACKAGE_brcminfo is not set
-# CONFIG_PACKAGE_brcm_fw_tool is not set
+CONFIG_PACKAGE_brcm_fw_tool=y
 
 
