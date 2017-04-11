@@ -263,18 +263,6 @@ define Image/Build/jffs2-nand-4096-128k
 		$(IMAGETAG_IMAGE_ARGS)
     endif
 
-    ifeq ($(CONFIG_TARGET_IMAGE_W),y)
-	# Concat the cfe and rootfs together (.w)
-	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
-            $(KDIR)/file128k.tmp | head --bytes=131072 > $(KDIR)/cfe_fs_image_128
-	cat $(KDIR)/root.$(1) >> $(KDIR)/cfe_fs_image_128
-
-	# Tag the combined image (.w)
-	$(STAGING_DIR_HOST)/bin/imagetag_nand -f $(KDIR)/cfe_fs_image_128 \
-		-o $(BIN_DIR)/$(IHGSP_BUILD_VERSION).w \
-		$(IMAGETAG_IMAGE_ARGS)
-    endif
-
 	# DIRTY! DIRTY! DIRTY! DIRTY! DIRTY! DIRTY! DIRTY!
 	# kernel and cferam flag not needed in UBI file systems!
 	# Take these away in "prepare" when we no longer build JFFS2 rootfs.
@@ -337,31 +325,6 @@ define Image/Build/ubi
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
     endif
 
-    ifeq ($(CONFIG_TARGET_IMAGE_Y),y)
-	# Make header (.y)
-	$(call Image/Build/Header,header.y,cfe$(CONFIG_BCM_CHIP_ID)_nand.v,vmlinux.jffs2,root.ubifs,void,pkginfo)
-
-	# Concat header, cfe, vmlinux and ubifs together (.y)
-	cat $(KDIR)/header.y \
-	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
-	    $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/root.ubifs \
-	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
-
-	# If build is signed also sign the cfe,kernel,fs part of the image.
-      ifeq ($(CONFIG_SMIMEOPT),y)
-	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
-	    $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/root.ubifs | \
-	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
-	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
-		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
-      endif
-
-	# Attach checksum to combined image (.y)
-	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y |awk '{printf "%s",$$$$1}' \
-		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y
-    endif
 endef
 
 define Image/Build

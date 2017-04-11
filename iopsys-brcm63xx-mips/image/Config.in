@@ -68,14 +68,6 @@ config TARGET_IMAGE_FS_Y2
 	bool "Generate a \"_fs.y2\" UBIFS root FS only image"
 	default n
 
-config TARGET_IMAGE_Y
-	bool "Generate a legacy \".y\" UBIFS CFE + root FS image (deprecated)"
-	default y
-
-config TARGET_IMAGE_W
-	bool "Generate a legacy \".w\" combined CFE + root FS image (deprecated)"
-	default n
-
 config TARGET_IMAGE_CFE
 	bool "Generate a legacy \"_cfe\" CFE only image (deprecated)"
 	default n
