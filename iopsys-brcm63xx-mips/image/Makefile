@@ -240,6 +240,7 @@ define Image/Build/ubi
 	# Attach checksum to combined image (.y2)
 	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2 |awk '{printf "%s",$$$$1}' \
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
+	ln -sf $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2 $(BIN_DIR)/last.y2
     endif
 
 endef
