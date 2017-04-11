@@ -100,34 +100,10 @@ define Image/Prepare
 		--pad -d $(KDIR)/kernel_fs -o $(KDIR)/vmlinux.jffs2
     endif
 
-	# generate jffs2 eof file marker of 128k size (.w)
-	dd if=/dev/zero of=$(KDIR)/file128k.tmp bs=1k count=128
-	echo -ne '\xde\xad\xc0\xde' > $(KDIR)/jffs2_eof_marker
-	#generate board tag
-	cat $(KDIR)/jffs2_eof_marker $(KDIR)/file128k.tmp | head --bytes=1024 > $(KDIR)/jffs2_eof_marker_1024
-	echo -ne $(CONFIG_TARGET_MODEL_NAME) >>$(KDIR)/jffs2_eof_marker_1024
-	cat $(KDIR)/jffs2_eof_marker_1024 $(KDIR)/file128k.tmp | head --bytes=2048 > $(KDIR)/jffs2_eof_marker_2048
-	#generate customer tag
-	echo -ne $(CONFIG_TARGET_CUSTOMER) >>$(KDIR)/jffs2_eof_marker_2048
-	cat $(KDIR)/jffs2_eof_marker_2048 $(KDIR)/file128k.tmp | head --bytes=131072 > $(KDIR)/jffs2_eof_marker_128k
-
-	# these files need to go in a set of erase blocks of their own to minimize the chance of relocation (.w)
-	echo "/$(CFERAM_FILENAME)"    >  $(KDIR)/sortlist
-	echo "/vmlinux.lz"    >> $(KDIR)/sortlist
-
-	# add the files that should not be compressed (.w)
-	echo -e "/IOP3"       > $(KDIR)/nocomprlist
-	echo -e "/$(CFERAM_FILENAME)" >> $(KDIR)/nocomprlist
-	echo -e "/vmlinux.lz" >> $(KDIR)/nocomprlist
-
     ifneq ($(CONFIG_TARGET_NO_1STBOOT_MARK),y)
 	# add "first boot" marker (.w.y.y2)
 	touch $(TARGET_DIR)/IOP3
     endif
-
-	# add kernel and cferam flag (.w)
-	touch $(TARGET_DIR)/$(CFERAM_FILENAME)
-	cp $(KDIR)/vmlinux.lz $(TARGET_DIR)/
 
 	# add/set version info (.w.y.y2)
 	sed -i 's/^IOP Version.*/IOP Version: $(IHGSP_BUILD_VERSION)/gi' $(BUILD_DIR_ROOT)/etc/banner
@@ -189,8 +165,6 @@ define Image/Prepare
 		rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11-rt19/btusb.ko
     endif
 
-	rm $(TARGET_DIR)/$(CFERAM_FILENAME)
-	rm $(TARGET_DIR)/vmlinux.lz
 endef
 
 define Image/Build/Header
