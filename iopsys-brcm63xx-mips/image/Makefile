@@ -242,30 +242,6 @@ define Image/Build/ubi
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
     endif
 
-    ifeq ($(CONFIG_TARGET_IMAGE_FS_Y2),y)
-	# Make header (_fs.y2)
-	$(call Image/Build/Header,header_fs.y2,void,vmlinux.jffs2,void,root.ubi,pkginfo)
-
-	# Concat header, vmlinux and ubi together (_fs.y2)
-	cat $(KDIR)/header_fs.y2 \
-	    $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/root.ubi \
-	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
-
-	# If build is signed also sign the kernel,fs part of the image.
-      ifeq ($(CONFIG_SMIMEOPT),y)
-	cat $(KDIR)/vmlinux.jffs2 \
-	    $(KDIR)/root.ubi | \
-	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
-	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
-		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
-      endif
-
-	# Attach checksum to combined image (_fs.y2)
-	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2 |awk '{printf "%s",$$$$1}' \
-		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs.y2
-    endif
-
 endef
 
 define Image/Build

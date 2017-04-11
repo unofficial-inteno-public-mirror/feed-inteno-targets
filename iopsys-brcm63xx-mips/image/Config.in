@@ -64,10 +64,6 @@ config TARGET_IMAGE_CFE_Y2
 	bool "Generate a \"_cfe.y2\" CFE only image"
 	default n
 
-config TARGET_IMAGE_FS_Y2
-	bool "Generate a \"_fs.y2\" UBIFS root FS only image"
-	default n
-
 config TARGET_IMAGE_CFE
 	bool "Generate a legacy \"_cfe\" CFE only image (deprecated)"
 	default n
