@@ -5,7 +5,6 @@
 # See /LICENSE for more information.
 #
 
-NAND_BLOCKSIZE := 4096-128k
 MKFS_DEVTABLE_OPT = -D $(CURDIR)/device_table.txt
 
 include $(TOPDIR)/rules.mk
@@ -247,27 +246,6 @@ define Image/Build/CFE
     endif
 
 	$(eval CFE_BUILT:=1)
-endef
-
-define Image/Build/jffs2-nand-4096-128k
-
-	echo "In Image/Build/jffs2-nand-4096-128k $(1) $(2)"
-
-	#add jffs2 eof marker
-	cat $(KDIR)/jffs2_eof_marker_128k >> $(KDIR)/root.$(1)
-
-    ifeq ($(CONFIG_TARGET_IMAGE_FS),y)
-	# Tag the rootfs image
-	$(STAGING_DIR_HOST)/bin/imagetag_nand -f $(KDIR)/root.$(1) \
-		-o $(BIN_DIR)/$(IHGSP_BUILD_VERSION)_fs_image \
-		$(IMAGETAG_IMAGE_ARGS)
-    endif
-
-	# DIRTY! DIRTY! DIRTY! DIRTY! DIRTY! DIRTY! DIRTY!
-	# kernel and cferam flag not needed in UBI file systems!
-	# Take these away in "prepare" when we no longer build JFFS2 rootfs.
-	rm $(TARGET_DIR)/$(CFERAM_FILENAME)
-	rm $(TARGET_DIR)/vmlinux.lz
 endef
 
 define Image/Build/ubi
