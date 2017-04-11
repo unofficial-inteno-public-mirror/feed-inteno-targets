@@ -53,32 +53,17 @@ endif
 # The following targets generate a number of different images:
 # xxx_cfe = Broadcom style CFE image
 # xxx_fs_image = Broadcom style JFFS2 image
-# .w = Broadcom style CFE+JFFS2 image for old banked lay-out
-# .y = UBI system upgrade image, containing cfe, kernel & UBIFS data,
-#      cannot be used with CFE (this image type is deprecated).
 # .y2 = UBI upgrade image for use with CFE or sysupgrade, containing cfe,
 #      kernel & UBI data
 #
 # The Broadcom images have an image tag attached to the end. The tag includes
 # compatibility information and a CRC of the complete image.
 #
-# The .w image contains a complete boot block (eraseblock 0) image
-# followed by N complete eraseblocks of JFFS2 or nvram+JFFS2+UBI data and
-# finally board and customer tags.
-#
-# The .y and .y2 images use an Inteno invented header containing some
+# The .y2 image use an Inteno invented header containing some
 # compatibility information and the size of each component that is included
 # (or zero for components not included). The header is followed by the
 # included components in a fixed predefined order.
 #
-# IMPORTANT:
-# Because of the incredible mess in the OpenWRT include/image-mk file, it
-# is currently necessary to have both CONFIG_TARGET_ROOTFS_JFFS2 and
-# CONFIG_TARGET_ROOTFS_UBIFS selected in .config. This is because the
-# Image/Build/jffs2-nand-4096-128k define below is responsible for deleting
-# vmlinux from the root fs. When we no longer build JFFS2 at all, vmlinux
-# could be deleted by Image/Prepare and CONFIG_TARGET_ROOTFS_JFFS2 could be
-# deselected.
 
 
 define Image/Prepare
@@ -86,12 +71,14 @@ define Image/Prepare
 	# Called before any rootfs images are built
 	echo "In Image/prepare $(1) $(2)"
 
-	# compressed kernel (.w.y.y2)
+	# compressed kernel (.y2)
 	$(STAGING_DIR_HOST)/bin/lzma e -d22 -lp2 -lc1 $(KDIR)/vmlinux.bcm $(KDIR)/vmlinux.lzma
 	$(STAGING_DIR_HOST)/bin/imagetag_nand $(IMAGETAG_KERNEL_ARGS)
 
     ifneq ($(CONFIG_TARGET_ROOTFS_UBIFS),)
-	# make kernel jffs2 image (.y.y2)	
+	# make kernel jffs2 image (.y2). The $(KDIR)/kernel_fs/$(CFERAM_FILENAME)
+	# file is a boot selector marker for cfe to know what bank to boot. It is
+	# updated by sysupgrade when writing a new image.
 	rm -rf $(KDIR)/kernel_fs
 	mkdir -p $(KDIR)/kernel_fs
 	cp $(KDIR)/vmlinux.lz $(wildcard $(KDIR)/*.dtb) $(KDIR)/kernel_fs/
@@ -103,11 +90,11 @@ define Image/Prepare
     endif
 
     ifneq ($(CONFIG_TARGET_NO_1STBOOT_MARK),y)
-	# add "first boot" marker (.w.y.y2)
+	# add "first boot" marker (.y2)
 	touch $(TARGET_DIR)/IOP3
     endif
 
-	# add/set version info (.w.y.y2)
+	# add/set version info (.y2)
 	sed -i 's/^IOP Version.*/IOP Version: $(IHGSP_BUILD_VERSION)/gi' $(BUILD_DIR_ROOT)/etc/banner
 	sed -i 's/^BrcmRef Base.*/BrcmRef Base: $(BRCMREF_STR)/gi' $(BUILD_DIR_ROOT)/etc/banner
 	#sed -i '7iIOP Version: $(IHGSP_BUILD_VERSION)' $(BUILD_DIR_ROOT)/etc/banner
@@ -123,7 +110,7 @@ define Image/Prepare
 	   | awk '{printf "===Package start===\nPackage: %s\nVersion: %s\n",$$$$1,$$$$2}' \
 	   > $(KDIR)/pkginfo
 
-	# strip out unneeded files (.w.y.y2)
+	# strip out unneeded files (.y2)
 	rm -rf $(BUILD_DIR_ROOT)/lib/modules/3.4.11
 
 	rm -rf $(BUILD_DIR_ROOT)/usr/lib/libvorbisenc*
