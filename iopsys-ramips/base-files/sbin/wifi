@@ -571,26 +571,20 @@ if uci show wireless | grep -q 'mode=.*wet.*'; then
 	# open a tcp socket and wait for
 	# master AP to push new configuration
 	killall -15 wificontrol >/dev/null 2>&1
-	killall -15 wificontrol >/dev/null 2>&1
-	sleep 1
-	wificontrol -s &
-else
 	killall -9 wificontrol >/dev/null 2>&1
-	# configure connected repeaters/extenders
-	ssid="$(uci -q get wireless.@wifi-iface[0].ssid)"
-	key="$(uci -q get wireless.@wifi-iface[0].key)"
-	json_load "$(ubus call router.network clients)"
-	_cno=1
-	while json_select client-$_cno; do
-		json_get_var assoclist assoclist
-		json_get_var connected connected
-		if [ -n "$assoclist" -a "$connected" == "1" ]; then
-			json_get_var ipaddr ipaddr
-			[ -n "$ipaddr" ] && wificontrol "$ipaddr" "$ssid" "$key"
-		fi
-		json_select ..
-		_cno=$((_cno+1))
-	done
+	sleep 1
+	wificontrol --repeater &
+else
+	local repeaterready=$(uci -q get netmode.setup.repeaterready)
+
+	killall -9 wificontrol >/dev/null 2>&1
+
+	if [ "$repeaterready" == "1" ] ; then
+		wificontrol --repeater &
+	else
+		# configure connected repeaters/extenders
+		wificontrol --router
+	fi
 fi
 
 convert_macros
