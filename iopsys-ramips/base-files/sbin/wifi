@@ -570,19 +570,15 @@ esac
 if uci show wireless | grep -q 'mode=.*wet.*'; then
 	# open a tcp socket and wait for
 	# master AP to push new configuration
-	killall -15 wificontrol >/dev/null 2>&1
-	killall -9 wificontrol >/dev/null 2>&1
-	sleep 1
-	wificontrol --repeater &
+	pidof wificontrol || wificontrol --repeater &
 else
 	local repeaterready=$(uci -q get netmode.setup.repeaterready)
 
-	killall -9 wificontrol >/dev/null 2>&1
-
 	if [ "$repeaterready" == "1" ] ; then
-		wificontrol --repeater &
+		pidof wificontrol || wificontrol --repeater &
 	else
 		# configure connected repeaters/extenders
+		killall -9 wificontrol >/dev/null 2>&1
 		wificontrol --router
 	fi
 fi
