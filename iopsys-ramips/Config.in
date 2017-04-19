@@ -12,6 +12,15 @@ config	KERNEL_GIT_COMMIT
 	string
 	default "339ed7af3b3ef116c7f8f74811174944f5224091" if TARGET_iopsys_ramips_ex400
 
+config KERNEL_HTTP_WGET_URI
+	string
+	default "http://localhost/mediatek-kernel-open" if TARGET_iopsys_ramips_ex400 && MEDIATEK_OPEN
+
+config MEDIATEK_OPEN
+	bool
+	prompt "Build package for Public SDK"
+	default n
+
 config TARGET_IBOARDID
 	string
 	default "EX400" if TARGET_iopsys_ramips_ex400
