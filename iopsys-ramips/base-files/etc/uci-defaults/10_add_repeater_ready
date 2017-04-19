@@ -3,3 +3,10 @@
 [ -f /etc/config/netmode ] || exit
 uci -q set netmode.setup.repeaterready=1
 uci commit netmode
+
+uci -q add wireless wifi-iface >/dev/null
+uci -q set wireless.@wifi-iface[-1].ssid='none'
+uci -q set wireless.@wifi-iface[-1].mode='wet'
+uci -q set wireless.@wifi-iface[-1].device='rai0'
+
+uci commit wireless
