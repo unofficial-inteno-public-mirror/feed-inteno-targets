@@ -11,14 +11,39 @@ config board 'board'
 	option ethernetPorts '2'
 	option ethernetPortNames 'LAN WAN'
 	option ethernetPortOrder 'eth0.1 eth0.2'
-	option ethernetSwitchPortOrder '1 0'
 	option ethernetLanPorts 'eth0.1'
 	option ethernetWanPort 'eth0.2'
+	
 	option sx9512_i2c_device '/dev/i2c-0'
 	option sx9512_i2c_address 2b
 	option sx9512_irq_pin 10
 	option sx9512_active_capsense_channels 0f
 	option sx9512_active_led_channels ff
+
+
+# Switch config
+config switch switch
+	option ports '1:lan 0:wan 6t@eth0 5t@eth0'
+	list port switch_port_0
+	list port switch_port_1
+	list port switch_port_5
+	list port switch_port_6
+# lan
+config port switch_port_1
+	option id 1
+	option matrix 78
+config port switch_port_6
+	option id 6
+	option matrix 78
+# wan
+config port switch_port_0
+	option id 0
+	option matrix 33
+config port switch_port_5
+	option id 5
+	option matrix 33
+
+
 
 
 ###############################################################################
