@@ -14,7 +14,7 @@ USB_PACKAGES = kmod-usb-storage kmod-scsi-core kmod-fs-vfat kmod-nls-cp437 kmod-
 
 USERSPACE_PACKAGES = wireless-tools bridge ated inbd
 
-KERNEL_PACKAGES = kmod-mt7603-mtk kmod-hwnat-mtk kmod-i2c-mt7621 kmod-i2c-core
+KERNEL_PACKAGES = kmod-mt7603-mtk kmod-mt7615-mtk kmod-hwnat-mtk kmod-i2c-mt7621 kmod-i2c-core
 
 DEFAULT_PACKAGES += uboot-ex400 $(KERNEL_PACKAGES) $(USB_PACKAGES) $(USERSPACE_PACKAGES)
 

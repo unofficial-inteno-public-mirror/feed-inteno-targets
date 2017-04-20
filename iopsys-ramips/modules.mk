@@ -124,3 +124,14 @@ define KernelPackage/mt7603-mtk
 endef
 
 $(eval $(call KernelPackage,mt7603-mtk))
+
+define KernelPackage/mt7615-mtk
+  SUBMENU:=Other modules
+  TITLE:=Mediatek mt7615 driver
+  DEPENDS:=@TARGET_iopsys_ramips @TARGET_iopsys_ramips_ex400
+  FILES:= \
+	$(LINUX_DIR)/drivers/net/wireless/mt_wifi_ap/mt_wifi.ko
+  AUTOLOAD:=$(call AutoLoad,61,mt_wifi,1)
+endef
+
+$(eval $(call KernelPackage,mt7615-mtk))
