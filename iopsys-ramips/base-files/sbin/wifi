@@ -245,7 +245,7 @@ wdev_settings() {
 	config_get country $cfg country ""
 	config_get hwmode $cfg hwmode "auto"
 	config_get channel $cfg channel "auto"
-	[ "$channel" == "auto" ] && autoch=2 || autoch=0
+	[ "$channel" == "auto" ] && autoch=1 || autoch=0
 	config_get dfsc $cfg dfsc "$isac"
 	[ "$dfsc" == "1" ] && autochskplist=""
 	config_get beamforming $cfg beamforming "1"
