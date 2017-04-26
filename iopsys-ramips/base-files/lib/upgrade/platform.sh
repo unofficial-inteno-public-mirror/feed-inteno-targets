@@ -176,7 +176,8 @@ platform_pre_upgrade() {
 	v "Rebooting system ..."
 	sync
 	export REBOOT_REASON=upgrade
-	echo "KEN !!!!! will now run exit 1"
+	echo "upgrade complete. rebooting system."
 	reboot -f
 }
+
 
