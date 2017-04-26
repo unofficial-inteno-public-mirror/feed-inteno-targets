@@ -249,6 +249,7 @@ wdev_settings() {
 	config_get dfsc $cfg dfsc "$isac"
 	[ "$dfsc" == "1" ] && autochskplist=""
 	config_get beamforming $cfg beamforming "1"
+	config_get dfszerowait $cfg dfszerowait "1"
 	config_get maxassoc $cfg maxassoc "32"
 	config_get atf $cfg atf "0"
 
@@ -314,7 +315,7 @@ wdev_settings() {
 		sed -i "s/HT_BW=.*/HT_BW=$htbw/g" $CONFILE
 		sed -i "s/VHT_BW=.*/VHT_BW=$vhtbw/g" $CONFILE
 		sed -i "s/VOW_Airtime_Fairness_En=.*/VOW_Airtime_Fairness_En=$atf/g" $CONFILE
-
+		sed -i "s/DfsZeroWait=.*/DfsZeroWait=$dfszerowait/g" $CONFILE
 		sed -i "s/IgmpSnEnable=.*/IgmpSnEnable=1/g" $CONFILE
 
 		#sed -i "s/ApCliWirelessMode=.*/ApCliWirelessMode=$wirelessmode/g" $CONFILE
