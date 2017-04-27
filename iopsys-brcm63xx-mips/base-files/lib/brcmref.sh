@@ -32,7 +32,8 @@ brcm_env() {
 	echo Setting up brcm environment
 	/bin/mount -a
 	echo "Copying device files from /lib/dev to /dev"
-	cp -a /lib/dev/* /dev
+	yes n | cp -ai /lib/dev/* /dev 2>/dev/null									# Don't overwrite dynamic files
+
 	mknod /var/fuse c 10 229
 	chmod a+rw /var/fuse
 	mkdir -p /var/log /var/run /var/state/dhcp /var/ppp /var/udhcpd /var/zebra /var/siproxd /var/cache /var/tmp /var/samba /var/samba/share /var/samba/homes /var/samba/private /var/samba/locks
