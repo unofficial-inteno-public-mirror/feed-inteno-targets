@@ -14,7 +14,7 @@ config	KERNEL_GIT_COMMIT
 
 config KERNEL_HTTP_WGET_URI
 	string
-	default "http://localhost/mediatek-kernel-open" if TARGET_iopsys_ramips_ex400 && MEDIATEK_OPEN
+	default "http://iopsys.inteno.se/iopsys/consumer/mediatek-kernel-open" if TARGET_iopsys_ramips_ex400 && MEDIATEK_OPEN
 
 config MEDIATEK_OPEN
 	bool
