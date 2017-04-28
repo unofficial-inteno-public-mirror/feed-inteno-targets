@@ -298,7 +298,7 @@ wdev_settings() {
 	esac
 
 	if [ $_DAT == 1 ]; then
-		sed -i "s/BssidNum=.*/BssidNum=$_VIFNUM/g" $CONFILE
+		#sed -i "s/BssidNum=.*/BssidNum=$_VIFNUM/g" $CONFILE
 		if [ ! -z $country_code ]; then
 			sed -i "s/CountryRegion=.*/CountryRegion=1/g" $CONFILE
 			sed -i "s/CountryRegionABand=.*/CountryRegionABand=1/g" $CONFILE
