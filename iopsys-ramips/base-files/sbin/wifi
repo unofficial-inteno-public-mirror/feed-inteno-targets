@@ -520,6 +520,18 @@ band_steering() {
 		iwpriv ra0 set BndStrgRssiLow=-100
 		iwpriv rai0 set BndStrgRssiLow=$rssi_threshold
 	fi
+
+	# start band steering daemon
+	bndstrg
+}
+
+kill_services() {
+	# kill band steering daemon
+	killall -9 bndstrg
+}
+
+start_services() {
+	band_steering
 }
 
 case "$_ACTION" in
@@ -587,12 +599,12 @@ else
 	fi
 fi
 
+kill_services
 convert_macros
 bring_wifi down
 configure_wifi
 bring_wifi up
-
-band_steering
+start_services
 
 # register rlt_wifi with hw_nat module
 iwpriv rai0 set hw_nat_register=1
