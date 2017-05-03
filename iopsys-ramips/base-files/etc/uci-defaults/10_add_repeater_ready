@@ -8,5 +8,6 @@ uci -q add wireless wifi-iface >/dev/null
 uci -q set wireless.@wifi-iface[-1].ssid='none'
 uci -q set wireless.@wifi-iface[-1].mode='wet'
 uci -q set wireless.@wifi-iface[-1].device='rai0'
+uci -q set wireless.@wifi-iface[-1].disabled='1'
 
 uci commit wireless
