@@ -527,7 +527,7 @@ band_steering() {
 
 kill_services() {
 	# kill band steering daemon
-	killall -9 bndstrg
+	killall -9 bndstrg 2>/dev/null
 }
 
 start_services() {
