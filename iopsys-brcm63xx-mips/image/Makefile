@@ -127,7 +127,6 @@ define Image/Prepare
     ifneq ($(CONFIG_TARGET_NO_1STBOOT_MARK),y)
 	# add "first boot" marker (.w.y.y2)
 	touch $(TARGET_DIR)/IOP3
-	touch $(TARGET_DIR)/NVCPY
     endif
 
 	# add kernel and cferam flag (.w)
