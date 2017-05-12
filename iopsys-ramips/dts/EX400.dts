@@ -54,3 +54,7 @@
 		};
 	};
 };
+
+&ethernet {
+        mediatek,portmap = "wllll";	
+};
