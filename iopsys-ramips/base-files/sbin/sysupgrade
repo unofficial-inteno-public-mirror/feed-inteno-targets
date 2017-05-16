@@ -31,7 +31,6 @@ ONLINE=0
 # parse options
 while [ -n "$1" ]; do
 	case "$1" in
-		-i) export INTERACTIVE=1;;
 		-d) export DELAY="$2"; shift;;
 		-v) export VERBOSE="$(($VERBOSE + 1))";;
 		-q) export VERBOSE="$(($VERBOSE - 1))";;
@@ -151,7 +150,6 @@ Usage: $0 [<upgrade-option>...] <image file or URL>
 upgrade-option:
 	-d <delay>   add a delay before rebooting
 	-f <config>  restore configuration from .tar.gz (file or url)
-	-i           interactive mode
 	-c           attempt to preserve all changed files in at least /etc/ (copy overlay)
 	-n           do not save configuration over reflash
 	-T | --test
@@ -240,12 +238,9 @@ add_uci_backup_files() {
 }
 
 # hooks
-sysupgrade_image_check="platform_check_image"
 sysupgrade_init_conffiles="add_uci_backup_files"
 
 include /lib/upgrade
-
-[ "$1" = "nand" ] && nand_upgrade_stage2 $@
 
 handle_etc() {
 	local BMAC=$(db -q get hw.board.BaseMacAddr | tr '[a-z]' '[A-Z]')
@@ -305,13 +300,13 @@ do_save_conffiles() {
 
 	handle_etc 1
 
-	[ -z "$(rootfs_type)" ] && {
-		echo "Cannot save config while running from ramdisk."
-		ask_bool 0 "Abort" && exit
-		return 0
-	}
-	run_hooks "$CONFFILES" $sysupgrade_init_conffiles
-	ask_bool 0 "Edit config file list" && vi "$CONFFILES"
+	#[ -z "$(rootfs_type)" ] && {
+	#	echo "Cannot save config while running from ramdisk."
+	#	ask_bool 0 "Abort" && exit
+	#	return 0
+	#}
+	add_uci_backup_files "$CONFFILES"
+	#ask_bool 0 "Edit config file list" && vi "$CONFFILES"
 
 	v "Saving config files..."
 	[ "$VERBOSE" -gt 1 ] && TAR_V="v" || TAR_V=""
@@ -378,11 +373,11 @@ do_save_conffiles_uci() {
 
 	handle_etc 1
 
-	[ -z "$(rootfs_type)" ] && {
-		echo "Cannot save config while running from ramdisk."
-		ask_bool 0 "Abort" && exit
-		return 0
-	}
+	#[ -z "$(rootfs_type)" ] && {
+	#	echo "Cannot save config while running from ramdisk."
+	#	ask_bool 0 "Abort" && exit
+	#	return 0
+	#}
 	uci export > $TMPDIR/$PROVFILE
 	
 
@@ -444,23 +439,21 @@ if [ -n "$CONF_RESTORE" ]; then
 	exit 0
 fi
 
-type platform_check_image >/dev/null 2>/dev/null || {
+type iopsys_check_image >/dev/null 2>/dev/null || {
 	echo "Firmware upgrade is not implemented for this platform."
 	exit 1
 }
 
-for check in $sysupgrade_image_check; do
-	( eval "$check \"\$ARGV\"" ) || {
-		if [ $FORCE -eq 1 ]; then
-			echo "Image check '$check' failed but --force given - will update anyway!"
-			break
-		else
-			ubus send "sysupgrade" "{\"status\":\"failed\", \"test\":\"$check\"}"
-			echo "Image check '$check' failed."
-			exit 1
-		fi
-	}
-done
+iopsys_check_image "$ARGV" || {
+	if [ $FORCE -eq 1 ]; then
+		echo "Image check '$check' failed but --force given - will update anyway!"
+		break
+	else
+		ubus send "sysupgrade" "{\"status\":\"failed\", \"test\":\"$check\"}"
+		echo "Image check '$check' failed."
+		exit 1
+	fi
+}
 
 ubus send "sysupgrade" "{\"status\":\"success\"}"
 
@@ -475,41 +468,13 @@ if [ -n "$CONF_IMAGE" ]; then
 	esac
 	get_image "$CONF_IMAGE" "cat" > "$CONF_TAR"
 	export SAVE_CONFIG=1
-elif ask_bool $SAVE_CONFIG "Keep config files over reflash"; then
-	[ $TEST -eq 1 ] || do_save_conffiles
-	export SAVE_CONFIG=1
-else
-	export SAVE_CONFIG=0
+elif [ $SAVE_CONFIG -eq 1 ]; then
+	do_save_conffiles
 fi
 
 if [ $TEST -eq 1 ]; then
 	exit 0
 fi
 
-run_hooks "" $sysupgrade_pre_upgrade
+iopsys_upgrade "$ARGV"
 
-# Some platforms/devices may want different sysupgrade process, e.g. without
-# killing processes yet or calling ubus system upgrade method.
-# This is needed e.g. on NAND devices where we just want to trigger stage1 at
-# this point.
-if type 'platform_pre_upgrade' >/dev/null 2>/dev/null; then
-    platform_pre_upgrade "$ARGV"
-fi
-
-ubus call system upgrade > /dev/null
-touch /tmp/sysupgrade
-
-if [ ! -f /tmp/failsafe ] ; then
-	kill_network
-	sleep 1
-	kill_remaining TERM
-	sleep 3
-	kill_remaining KILL
-fi
-
-if [[ $(cat /tmp/IS_NAND) -eq 0 && -n "$(rootfs_type)" ]]; then
-	v "Switching to ramdisk..."
-	run_ramfs '. /lib/functions.sh; include /lib/upgrade; do_upgrade'
-else
-	do_upgrade
-fi
