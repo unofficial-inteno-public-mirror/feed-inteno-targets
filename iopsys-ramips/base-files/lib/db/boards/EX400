@@ -11,9 +11,10 @@ config board 'board'
 	option ethernetPorts '2'
 	option ethernetPortNames 'LAN WAN'
 	option ethernetPortOrder 'eth0.1 eth0.2'
+	option ethernetSwitchPortOrder '1 0'
 	option ethernetLanPorts 'eth0.1'
 	option ethernetWanPort 'eth0.2'
-	
+
 	option sx9512_i2c_device '/dev/i2c-0'
 	option sx9512_i2c_address 2b
 	option sx9512_irq_pin 10
@@ -83,7 +84,7 @@ config 9512_button 9512_touch_near
 config 9512_button 9512_touch_far
        option addr   9
 
-	
+
 #
 #		Button config , end
 #
@@ -92,14 +93,14 @@ config 9512_button 9512_touch_far
 ###############################################################################
 #
 #		Led config, start
-# 
+#
 
 ############### 9512 led, driver config
 config 9512_led 9512_leds
 	list leds Internet_green
 	list leds Internet_red
 	list leds Wireless_24
-	list leds Wireless_5	
+	list leds Wireless_5
 
 config 9512_led Internet_green
        option addr     5
@@ -118,7 +119,7 @@ config 9512_led Wireless_5
 config gpio_led gpio_leds
         list leds Status_green
         list leds Status_red
-	list leds WPS_green	
+	list leds WPS_green
 
 config gpio_led Status_green
        option addr	8
@@ -138,12 +139,12 @@ config 9512_led WPS_green
 ############### mapping led function to driver led
 config led_map led_map
        list press_indicator led_wifi_2g
-       list press_indicator led_wifi_5g	
+       list press_indicator led_wifi_5g
        list press_indicator led_wps
        list press_indicator led_internet
 
 	list functions 'wifi_2g'
-	list functions 'wifi_5g'	
+	list functions 'wifi_5g'
 	list functions wps
 	list functions status
 	list functions internet
@@ -175,10 +176,10 @@ config led_map led_wps
        list led_action_off	'WPS_green=OFF'
        list led_action_notice	'WPS_green=FLASH_SLOW'
        list led_action_alert	'WPS_green=FLASH_FAST'
-       list led_action_error	'WPS_green=OFF'  
+       list led_action_error	'WPS_green=OFF'
 
 config led_map led_status
-       list led_action_ok	'Status_green = ON'    
+       list led_action_ok	'Status_green = ON'
        list led_action_ok     	'Status_red   = OFF'
        list led_action_off	'Status_green = OFF'
        list led_action_off	'Status_red   = OFF'
