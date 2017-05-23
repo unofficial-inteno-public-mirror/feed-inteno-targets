@@ -203,6 +203,33 @@ define Image/Build/Header
 	truncate --size=0 $(KDIR)/void
 	echo "IntenoBlob" > $(KDIR)/hdr
 	echo "version $(HEADER_VERSION)" >> $(KDIR)/hdr
+
+	echo "integrity MD5SUM" >> $(KDIR)/hdr
+	echo "board $(CONFIG_TARGET_IBOARDID)" >> $(KDIR)/hdr
+	echo "chip $(CONFIG_BCM_CHIP_ID)" >> $(KDIR)/hdr
+	echo "arch all $(CONFIG_TARGET_ARCH_PACKAGES)" >> $(KDIR)/hdr
+	echo "model $(CONFIG_TARGET_MODEL_NAME)" >> $(KDIR)/hdr
+	echo "release $(CONFIG_TARGET_VERSION)" >> $(KDIR)/hdr
+	echo "customer $(CONFIG_TARGET_CUSTOMER)" >> $(KDIR)/hdr
+	echo "cfe $$$$(ls -l $(KDIR)/$(2) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "vmlinux $$$$(ls -l $(KDIR)/$(3) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "ubifs $$$$(ls -l $(KDIR)/$(4) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "ubi $$$$(ls -l $(KDIR)/$(5) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+	echo "pkginfo $$$$(ls -l $(KDIR)/$(6) | awk '{print $$$$5}')" >> $(KDIR)/hdr
+    ifeq ($(CONFIG_SMIMEOPT),y)
+	echo "sig 256" >> $(KDIR)/hdr
+    endif
+	cat $(KDIR)/hdr /dev/zero | head --bytes=1024 > $(KDIR)/$(1)
+endef
+
+define NewImage/Build/Header
+	# Args: $1=header $2=cfe $3=kernel $4=ubifs $5=ubi $6=pkginfo
+	# Any unused arguments should be passed as 'void'
+
+	echo "In NewImage/Build/Header $(1) $(2) $(3) $(4) $(5) $(6)"
+	truncate --size=0 $(KDIR)/void
+	echo "IntenoBlob" > $(KDIR)/hdr
+	echo "version 4" >> $(KDIR)/hdr
 	echo "integrity MD5SUM" >> $(KDIR)/hdr
 	echo "board $(CONFIG_TARGET_IBOARDID)" >> $(KDIR)/hdr
 	echo "chip $(CONFIG_BCM_CHIP_ID)" >> $(KDIR)/hdr
@@ -313,6 +340,31 @@ define Image/Build/ubi
 		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y2
     endif
 
+    ifeq ($(CONFIG_TARGET_IMAGE_Y3),y)
+	# Make header (.y3)
+	$(call NewImage/Build/Header,header.y3,cfe$(CONFIG_BCM_CHIP_ID)_nand.v3,vmlinux.jffs2,void,root.ubi,pkginfo)
+	# Concat header, cfe, vmlinux and ubi together (.y3)
+	cat $(KDIR)/header.y3 \
+	    $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v3 \
+	    $(KDIR)/vmlinux.jffs2 \
+	    $(KDIR)/root.ubi \
+	    $(KDIR)/pkginfo > $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y3
+
+
+	# If build is signed also sign the cfe,kernel,fs part of the image.
+      ifeq ($(CONFIG_SMIMEOPT),y)
+	cat $(KDIR)/cfe$(CONFIG_BCM_CHIP_ID)_nand.v \
+	    $(KDIR)/vmlinux.jffs2 \
+	    $(KDIR)/root.ubi | \
+	openssl dgst -sha256 -sign $(CONFIG_OPKGSMIME_KEY) \
+	-passin file:$(call qstrip,$(CONFIG_OPKGSMIME_PASSFILE)) \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y3
+      endif
+
+	# Attach checksum to combined image (.y2)
+	md5sum $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y3 |awk '{printf "%s",$$$$1}' \
+		>> $(BIN_DIR)/$(IHGSP_BUILD_VERSION).y3
+    endif
     ifeq ($(CONFIG_TARGET_IMAGE_FS_Y2),y)
 	# Make header (_fs.y2)
 	$(call Image/Build/Header,header_fs.y2,void,vmlinux.jffs2,void,root.ubi,pkginfo)

@@ -60,6 +60,10 @@ config TARGET_IMAGE_Y2
 	bool "Generate a \".y2\" UBIFS CFE + root FS image"
 	default y
 
+config TARGET_IMAGE_Y3
+	bool "Generate a \".y3\" UBIFS CFE + root FS image"
+	default y
+
 config TARGET_IMAGE_CFE_Y2
 	bool "Generate a \"_cfe.y2\" CFE only image"
 	default n
