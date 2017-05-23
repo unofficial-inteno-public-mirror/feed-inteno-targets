@@ -10,7 +10,7 @@ config 	KERNEL_GIT_BRANCH
 
 config	KERNEL_GIT_COMMIT
 	string
-	default "395468247856b8b0d87ccc63c1322365c24188a1" if TARGET_iopsys_ramips_ex400
+	default "08d78e9f8c9e5e7579ac322666ba41273bd2447c" if TARGET_iopsys_ramips_ex400
 
 config KERNEL_HTTP_WGET_URI
 	string
